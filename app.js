@@ -40,6 +40,25 @@ app.use("/", require("./routes/footprint"));
 app.use("/", require("./routes/community"));
 app.use("/", require("./routes/animatedcard"));
 
+//API ROUTES for Explore-page
+app.use("/explore", require("./routes/Blockovia"));
+app.use("/explore", require("./routes/paragraph"));
+app.use("/explore", require("./routes/scalability"));
+app.use("/explore", require("./routes/security"));
+app.use("/explore", require("./routes/privacy"));
+
+//API ROUTES for Utility-page
+app.use("/utility", require("./routes/utility"));
+app.use("/utility", require("./routes/metrics"));
+app.use("/utility", require("./routes/utilityCount"));
+app.use("/utility", require("./routes/azero"));
+app.use("/utility", require("./routes/finma"));
+app.use("/utility", require("./routes/economics"));
+app.use("/utility", require("./routes/mechanism"));
+
+//API ROUTES for UseCases-page
+app.use("/use", require("./routes/applicationsCases"));
+app.use("/use", require("./routes/casesanimated"));
 
 
 

@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
-const CarbonSchema = new Schema({
+
+const EcosystemSchema = new Schema({
     title: {
         type: String,
         required: false,
@@ -11,11 +12,11 @@ const CarbonSchema = new Schema({
         type: String,
         required: false,
         default: ""
-    }
+    },
 }, { timestamps: true, toJSON: true }
 );
-CarbonSchema.set("toObject", { virtuals: true });
-CarbonSchema.set("toJSON", { virtuals: true });
+ EcosystemSchema.set("toObject", { virtuals: true });
+ EcosystemSchema.set("toJSON", { virtuals: true });
 
-const Carbon = mongoose.model(" Carbon", CarbonSchema, " Carbon");
-module.exports = Carbon;
+const  Ecosystem = mongoose.model(" Ecosystem", EcosystemSchema, " Ecosystem");
+module.exports = Ecosystem;

@@ -60,6 +60,36 @@ app.use("/utility", require("./routes/mechanism"));
 app.use("/use", require("./routes/applicationsCases"));
 app.use("/use", require("./routes/casesanimated"));
 
+//API ROUTES for Carbon-Footprint-page
+app.use("/carbon-negative", require("./routes/carbon"));
+app.use("/carbon-negative", require("./routes/green"));
+app.use("/carbon-negative", require("./routes/accord"));
+app.use("/carbon-negative", require("./routes/numbers"));
+app.use("/carbon-negative", require("./routes/numbertext"));
+app.use("/carbon-negative", require("./routes/validator"));
+app.use("/carbon-negative", require("./routes/unitCard"));
+app.use("/carbon-negative", require("./routes/actions"));
+app.use("/carbon-negative", require("./routes/agriculture"));
+
+//API ROUTES for Staking-page
+app.use("/staking", require("./routes/secure"));
+app.use("/staking", require("./routes/staking"));
+app.use("/staking", require("./routes/stakingcard"));
+app.use("/staking", require("./routes/StakingValidator"));
+app.use("/staking", require("./routes/validator"));
+app.use("/staking", require("./routes/nominator"));
+
+//API ROUTES for Ecosystem-page
+app.use("/ecosystem", require("./routes/ecosystem"));
+app.use("/ecosystem", require("./routes/ecosystemCard"));
+app.use("/ecosystem", require("./routes/imageCard"));
+
+//API ROUTES for BULID-page
+app.use("/build", require("./routes/funding"));
+app.use("/build", require("./routes/purpose"));
+app.use("/build", require("./routes/purposeCard"))
+app.use("/build", require("./routes/resource"))
+app.use("/build", require("./routes/resourceCard"))
 
 
 app.listen(`${process.env.PORT}`, () => {

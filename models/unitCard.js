@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
-const CarbonSchema = new Schema({
+const UnitsSchema = new Schema({
     title: {
         type: String,
         required: false,
@@ -14,8 +14,8 @@ const CarbonSchema = new Schema({
     }
 }, { timestamps: true, toJSON: true }
 );
-CarbonSchema.set("toObject", { virtuals: true });
-CarbonSchema.set("toJSON", { virtuals: true });
+UnitsSchema.set("toObject", { virtuals: true });
+UnitsSchema.set("toJSON", { virtuals: true });
 
-const Carbon = mongoose.model(" Carbon", CarbonSchema, " Carbon");
-module.exports = Carbon;
+const Units = mongoose.model(" Units", UnitsSchema, " Units");
+module.exports = Units;

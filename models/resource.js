@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
-const CarbonSchema = new Schema({
+const ResourceSchema = new Schema({
     title: {
         type: String,
         required: false,
@@ -14,8 +14,8 @@ const CarbonSchema = new Schema({
     }
 }, { timestamps: true, toJSON: true }
 );
-CarbonSchema.set("toObject", { virtuals: true });
-CarbonSchema.set("toJSON", { virtuals: true });
+ResourceSchema.set("toObject", { virtuals: true });
+ResourceSchema.set("toJSON", { virtuals: true });
 
-const Carbon = mongoose.model(" Carbon", CarbonSchema, " Carbon");
-module.exports = Carbon;
+const Resource = mongoose.model(" Resource", ResourceSchema, " Resource");
+module.exports = Resource;

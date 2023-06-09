@@ -1,10 +1,8 @@
-const ResourceCard = require('../../models/resourceCard')
+const Process = require('../../models/process')
 bodyParser = require("body-parser")
 Validator = require("validatorjs")
 
-
-
-exports.resourceCardAdd = async (req, res) => {
+exports.processAdd = async (req, res) => {
     try {
         const rules = { title: "required", paragraph: "required" };
         var validation = new Validator(req.body, rules);
@@ -12,10 +10,9 @@ exports.resourceCardAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let ResourceCardData = await ResourceCard.findOne({ title: title }).lean();
-            if (!ResourceCardData) {
-
-                let data = await ResourceCard.create({
+            let ProcessData = await Process.findOne({ title: title }).lean();
+            if (!ProcessData) {
+                let data = await Process.create({
                     title: title,
                     paragraph: paragraph,
                 });
@@ -30,21 +27,16 @@ exports.resourceCardAdd = async (req, res) => {
     }
 }
 
-exports.resourceCardGet = async (req, res) => {
+exports.processGet = async (req, res) => {
     try {
-        const contentlist = await ResourceCard.find().sort({ createdAt: 1 });
-        if (contentlist && contentlist.length > 0) {
-            let resourceData = []
-            contentlist.forEach(content => {
-                const contentObj = {
-                    _id: content._id,
-                    title: content.title,
-                    paragraph: content.paragraph
-                };
-                resourceData.push(contentObj);
-            })
-
-            return res.status(200).json({ responseMessage: "Successfully", responseData: resourceData });
+        const contentlist = await Process.findOne().sort({ createdAt: 1 });
+        if (contentlist) {
+            const contentObj = {
+                _id: contentlist._id,
+                title: contentlist.title,
+                paragraph: contentlist.paragraph,
+            };
+            return res.status(200).json({ responseMessage: "Successfully", responseData: contentObj });
         } else {
             return res.status(404).json({ responseMessage: "No Data found", responseData: {} })
         };
@@ -53,10 +45,11 @@ exports.resourceCardGet = async (req, res) => {
     }
 };
 
-exports.resourceCardUpdate = async (req, res,) => {
+exports.processUpdate = async (req, res) => {
     try {
         const rules = { title: "required", paragraph: "required" };
         const validation = new Validator(req.body, rules);
+
         if (validation.fails()) {
             return res.status(422).json({
                 responseMessage: "Validation Error", responseData: validation.errors.all(),
@@ -64,19 +57,21 @@ exports.resourceCardUpdate = async (req, res,) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let ResourceCardData = await ResourceCard.findById(_id).lean();
-            if (ResourceCardData) {
-                let updatedData = {
+            let ProcessData = await Process.findById(_id).lean();
+            if (!ProcessData) {
+                return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
+            } else {
+                const updatedData = {
                     title: title,
                     paragraph: paragraph,
-                }
-                const data = await ResourceCard.findByIdAndUpdate({ _id: ResourceCardData._id }, updatedData, { new: true });
-                return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
-            } else {
-                return res.status(404).json({ responseMessage: "Data not found", responseData: {}, });
-            };
+                };
+                const data = await Process.findByIdAndUpdate({ _id: ProcessData._id }, updatedData, { new: true });
+
+                return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
+            }
         }
     } catch (err) {
-        return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {}, });
+        return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {} });
     }
 };
+

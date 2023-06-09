@@ -1,23 +1,24 @@
-const ResourceCard = require('../../models/resourceCard')
+const TierCard = require('../../models/tierCard')
 bodyParser = require("body-parser")
 Validator = require("validatorjs")
 
 
 
-exports.resourceCardAdd = async (req, res) => {
+exports.tierCardAdd = async (req, res) => {
     try {
-        const rules = { title: "required", paragraph: "required" };
+        const rules = { title: "required", content: "required", paragraph: "required" };
         var validation = new Validator(req.body, rules);
         if (validation.fails()) {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
-            const { title, paragraph } = req.body;
-            let ResourceCardData = await ResourceCard.findOne({ title: title }).lean();
-            if (!ResourceCardData) {
+            const { title, content, paragraph } = req.body;
+            let TierCardData = await TierCard.findOne({ title: title }).lean();
+            if (!TierCardData) {
 
-                let data = await ResourceCard.create({
+                let data = await TierCard.create({
                     title: title,
-                    paragraph: paragraph,
+                    content: content,
+                    paragraph: paragraph
                 });
                 return res.status(200).json({ responseMessage: "Successfully", responseData: { data }, });
             } else {
@@ -30,15 +31,16 @@ exports.resourceCardAdd = async (req, res) => {
     }
 }
 
-exports.resourceCardGet = async (req, res) => {
+exports.tierCardGet = async (req, res) => {
     try {
-        const contentlist = await ResourceCard.find().sort({ createdAt: 1 });
+        const contentlist = await TierCard.find().sort({ createdAt: 1 });
         if (contentlist && contentlist.length > 0) {
             let resourceData = []
             contentlist.forEach(content => {
                 const contentObj = {
                     _id: content._id,
                     title: content.title,
+                    content: content.content,
                     paragraph: content.paragraph
                 };
                 resourceData.push(contentObj);
@@ -53,24 +55,25 @@ exports.resourceCardGet = async (req, res) => {
     }
 };
 
-exports.resourceCardUpdate = async (req, res,) => {
+exports.tierCardUpdate = async (req, res,) => {
     try {
-        const rules = { title: "required", paragraph: "required" };
+        const rules = { title: "required", content: "required", paragraph: "required" };
         const validation = new Validator(req.body, rules);
         if (validation.fails()) {
             return res.status(422).json({
                 responseMessage: "Validation Error", responseData: validation.errors.all(),
             });
         } else {
-            const { title, paragraph } = req.body;
+            const { title, content,paragraph } = req.body;
             const { _id } = req.query;
-            let ResourceCardData = await ResourceCard.findById(_id).lean();
-            if (ResourceCardData) {
+            let TierCardData = await TierCard.findById(_id).lean();
+            if (TierCardData) {
                 let updatedData = {
                     title: title,
+                    content:content,
                     paragraph: paragraph,
                 }
-                const data = await ResourceCard.findByIdAndUpdate({ _id: ResourceCardData._id }, updatedData, { new: true });
+                const data = await TierCard.findByIdAndUpdate({ _id: TierCardData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
             } else {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {}, });

@@ -1,10 +1,10 @@
-const ResourceCard = require('../../models/resourceCard')
+const CriteriaCard = require('../../models/criteriaCard')
 bodyParser = require("body-parser")
 Validator = require("validatorjs")
 
 
 
-exports.resourceCardAdd = async (req, res) => {
+exports.criteriaCardAdd = async (req, res) => {
     try {
         const rules = { title: "required", paragraph: "required" };
         var validation = new Validator(req.body, rules);
@@ -12,10 +12,10 @@ exports.resourceCardAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let ResourceCardData = await ResourceCard.findOne({ title: title }).lean();
-            if (!ResourceCardData) {
+            let CriteriaCardData = await CriteriaCard.findOne({ title: title }).lean();
+            if (!CriteriaCardData) {
 
-                let data = await ResourceCard.create({
+                let data = await CriteriaCard.create({
                     title: title,
                     paragraph: paragraph,
                 });
@@ -30,9 +30,9 @@ exports.resourceCardAdd = async (req, res) => {
     }
 }
 
-exports.resourceCardGet = async (req, res) => {
+exports.criteriaCardGet = async (req, res) => {
     try {
-        const contentlist = await ResourceCard.find().sort({ createdAt: 1 });
+        const contentlist = await CriteriaCard.find().sort({ createdAt: 1 });
         if (contentlist && contentlist.length > 0) {
             let resourceData = []
             contentlist.forEach(content => {
@@ -44,7 +44,7 @@ exports.resourceCardGet = async (req, res) => {
                 resourceData.push(contentObj);
             })
 
-            return res.status(200).json({ responseMessage: "Successfully", responseData: resourceData });
+            return res.status(200).json({ responseMessage: "Successfully",count: contentlist.length, responseData: resourceData,  });
         } else {
             return res.status(404).json({ responseMessage: "No Data found", responseData: {} })
         };
@@ -53,7 +53,7 @@ exports.resourceCardGet = async (req, res) => {
     }
 };
 
-exports.resourceCardUpdate = async (req, res,) => {
+exports.criteriaCardUpdate = async (req, res,) => {
     try {
         const rules = { title: "required", paragraph: "required" };
         const validation = new Validator(req.body, rules);
@@ -64,13 +64,13 @@ exports.resourceCardUpdate = async (req, res,) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let ResourceCardData = await ResourceCard.findById(_id).lean();
-            if (ResourceCardData) {
+            let CriteriaCardData = await CriteriaCard.findById(_id).lean();
+            if (CriteriaCardData) {
                 let updatedData = {
                     title: title,
                     paragraph: paragraph,
                 }
-                const data = await ResourceCard.findByIdAndUpdate({ _id: ResourceCardData._id }, updatedData, { new: true });
+                const data = await CriteriaCard.findByIdAndUpdate({ _id: CriteriaCardData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
             } else {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {}, });

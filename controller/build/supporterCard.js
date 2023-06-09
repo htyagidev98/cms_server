@@ -1,4 +1,4 @@
-const ImageCard = require('../../models/imageCard')
+const SupporterCard = require('../../models/supporterCard')
 bodyParser = require("body-parser")
 Validator = require("validatorjs")
 const cloudinary = require('cloudinary').v2;
@@ -9,23 +9,22 @@ cloudinary.config({
     api_secret: 'uTuU6iIGtleSOIbtZDO_x5hPErc'
 });
 
-exports.imageCardAdd = async (req, res, images) => {
+exports.supporterCardAdd = async (req, res, images) => {
     try {
-        const rules = { title: "required", paragraph: "required" };
+        const rules = { paragraph: "required" };
         var validation = new Validator(req.body, rules);
         if (validation.fails()) {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
-            const { title, paragraph, } = req.body;
-            let imageData = await ImageCard.findOne({ title: title }).lean();
-            if (!imageData) {
+            const { paragraph } = req.body;
+            let SupporterData = await SupporterCard.findOne({ paragraph: paragraph }).lean();
+            if (!SupporterData) {
                 let result = await cloudinary.uploader.upload(req.file.path, {
                     images,
                     overwrite: true,
                     faces: false,
                 });
-                let data = await ImageCard.create({
-                    title: title,
+                let data = await SupporterCard.create({
                     paragraph: paragraph,
                     image_url: result.secure_url,
                     image_id: result.public_id
@@ -41,15 +40,14 @@ exports.imageCardAdd = async (req, res, images) => {
     }
 }
 
-exports.imageCardGet = async (req, res) => {
+exports.supporterCardGet = async (req, res) => {
     try {
-        const contentlist = await ImageCard.find().sort({ createdAt: 1 });
+        const contentlist = await SupporterCard.find().sort({ createdAt: 1 });
         if (contentlist && contentlist.length > 0) {
             let cardData = []
             contentlist.forEach(content => {
                 const contentObj = {
                     _id: content._id,
-                    title: content.title,
                     paragraph: content.paragraph,
                     image_url: content.image_url,
                     image_id: content.image_id
@@ -59,33 +57,28 @@ exports.imageCardGet = async (req, res) => {
 
             return res.status(200).json({ responseMessage: "Successfully", responseData: cardData });
         } else {
-            return res.status(200).json({ responseMessage: "No Data found", responseData: {} })
+            return res.status(404).json({ responseMessage: "No Data found", responseData: {} })
         };
     } catch (err) {
         return res.status(500).json({ responseMessage: " Internal Sever Error", responseData: {} })
     }
 };
 
-
-exports.imageCardUpdate = async (req, res, images) => {
+exports.supporterCardUpdate = async (req, res, images) => {
     try {
-        const rules = { title: "required", paragraph: "required" };
+        const rules = {  paragraph: "required" };
         const validation = new Validator(req.body, rules);
 
         if (validation.fails()) {
-            return res.status(422).json({
-                responseMessage: "Validation Error",
-                responseData: validation.errors.all(),
-            });
+            return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
-            const { title, paragraph } = req.body;
+            const {  paragraph } = req.body;
             const { _id } = req.query;
-            let imageData = await ImageCard.findById(_id).lean();
-            if (!imageData) {
+            let SupporterData = await SupporterCard.findById(_id).lean();
+            if (!SupporterData) {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
             } else {
                 let updatedData = {
-                    title: title,
                     paragraph: paragraph,
                 };
                 if (req.file) {
@@ -97,7 +90,7 @@ exports.imageCardUpdate = async (req, res, images) => {
                     updatedData.image_url = result.secure_url;
                     updatedData.image_id = result.public_id;
                 }
-                const data = await ImageCard.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await SupporterCard.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }
@@ -107,13 +100,12 @@ exports.imageCardUpdate = async (req, res, images) => {
     }
 };
 
-
-exports.imageCardDelete = async (req, res) => {
+exports.supporterCardDelete = async (req, res) => {
     try {
         const { _id } = req.query;
-        let imageData = await ImageCard.findById(_id).lean();
-        if (imageData) {
-            await ImageCard.findByIdAndDelete({ _id: imageData._id }, imageData, { new: true });
+        let SupporterData = await SupporterCard.findById(_id).lean();
+        if (SupporterData) {
+            await SupporterCard.findByIdAndDelete({ _id: SupporterData._id }, SupporterData, { new: true });
             return res.status(200).json({ responseMessage: "Deleted Successfully ", responseData: {} });
         } else {
             return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
@@ -122,52 +114,3 @@ exports.imageCardDelete = async (req, res) => {
         return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {} });
     }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-// exports.imageCardUpdate = async (req, res, images) => {
-//     // try {
-//         const rules = { title: "required", paragraph: "required" };
-//         const validation = new Validator(req.body, rules);
-
-//         if (validation.fails()) {
-//             return res.status(422).json({
-//                 responseMessage: "Validation Error", responseData: validation.errors.all(),
-//             });
-//         } else {
-//             const { title, paragraph } = req.body;
-//             const { _id } = req.query;
-//             let imageData = await ImageCard.findById(_id).lean();
-//             if (!networkData) {
-//                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
-//             } else {
-//                 const result = await cloudinary.uploader.upload(req.file.path, {
-//                     images,
-//                     overwrite: true,
-//                     faces: false,
-//                 });
-//                 console.log(typeof req.file.path)          
-//                   const updatedData = {
-//                     title: title,
-//                     paragraph: paragraph,
-//                     image_url: result.secure_url,
-//                     image_id: result.public_id
-//                 };
-//                 const data = await ImageCard.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
-
-//                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
-//             }
-//         }
-//     // } catch (err) {
-//     //     return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {} });
-//     // }
-// };

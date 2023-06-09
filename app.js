@@ -94,12 +94,22 @@ app.use("/build", require("./routes/available"));
 app.use("/build", require("./routes/tierCard"));
 app.use("/build", require("./routes/consideration"));
 app.use("/build", require("./routes/criteriaCard"));
-app.use("/build", require("./routes/request"))
-app.use("/build", require("./routes/requestCard"))
-app.use("/build", require("./routes/process"))
-app.use("/build", require("./routes/processCard"))
-app.use("/build", require("./routes/supporter"))
+app.use("/build", require("./routes/request"));
+app.use("/build", require("./routes/requestCard"));
+app.use("/build", require("./routes/process"));
+app.use("/build", require("./routes/processCard"));
+app.use("/build", require("./routes/supporter"));
 app.use("/build", require("./routes/supporterCard"))
+
+//API ROUTES for Dev portal-page
+app.use("/dev", require("./routes/portal"));
+app.use("/dev", require("./routes/zero"));
+app.use("/dev", require("./routes/zeroCard"))
+app.use("/dev", require("./routes/powered"))
+
+
+
+
 
 
 app.listen(`${process.env.PORT}`, () => {

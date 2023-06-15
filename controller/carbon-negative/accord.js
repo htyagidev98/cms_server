@@ -32,7 +32,7 @@ exports.accordAdd = async (req, res) => {
 
 exports.accordGet = async (req, res) => {
     try {
-        const contentlist = await Accord.findOne().sort({ createdAt: 1 });
+        const contentlist = await Accord.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -65,7 +65,7 @@ exports.accordUpdate = async (req, res,) => {
                     title: title,
                     paragraph: paragraph,
                 }
-                const data = await Accord.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Accord.findByIdAndUpdate({ _id: accordData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
             } else {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {}, });

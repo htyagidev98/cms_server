@@ -97,7 +97,7 @@ exports.imageCardUpdate = async (req, res, images) => {
                     updatedData.image_url = result.secure_url;
                     updatedData.image_id = result.public_id;
                 }
-                const data = await ImageCard.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await ImageCard.findByIdAndUpdate({ _id: imageData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }

@@ -10,8 +10,8 @@ exports.stakingCardAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let StakingCardData = await StakingCard.findOne({ title: title }).lean();
-            if (!StakingCardData) {
+            let stakingCardData = await StakingCard.findOne({ title: title }).lean();
+            if (!stakingCardData) {
                 let data = await StakingCard.create({
                     title: title,
                     paragraph: paragraph,
@@ -61,15 +61,15 @@ exports.stakingCardUpdate = async (req, res) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let StakingCardData = await StakingCard.findById(_id).lean();
-            if (!StakingCardData) {
+            let stakingCardData = await StakingCard.findById(_id).lean();
+            if (!stakingCardData) {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
             } else {
                 const updatedData = {
                     title: title,
                     paragraph: paragraph,
                 };
-                const data = await StakingCard.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await StakingCard.findByIdAndUpdate({ _id: stakingCardData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }

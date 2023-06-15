@@ -10,8 +10,8 @@ exports.calculationAdd = async (req, res,) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph, } = req.body;
-            let CalculationData = await Calculation.findOne({ title: title }).lean();
-            if (!CalculationData) {
+            let calculationData = await Calculation.findOne({ title: title }).lean();
+            if (!calculationData) {
                 let data = await Calculation.create({
                     title: title,
                     paragraph: paragraph,
@@ -75,7 +75,7 @@ exports.calculationContentUpdate = async (req, res, images) => {
                 title: title,
                 paragraph: paragraph
             }
-            let data = await Calculation.findByIdAndUpdate({ _id: _id }, updatedData, { new: false, });
+            let data = await Calculation.findByIdAndUpdate({ _id: calculationData._id }, updatedData, { new: false, });
             return res.status(200).json({ responseMessage: "Successfully", responseData: { data }, });
         } else {
             return res.status(404).json({ esponseMessage: "Data not found", responseData: {}, });

@@ -32,7 +32,7 @@ exports.applicationsAdd = async (req, res) => {
 
 exports.applicationsGet = async (req, res) => {
     try {
-        const contentlist = await Applications.findOne().sort({ createdAt: 1 });
+        const contentlist = await Applications.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -65,7 +65,7 @@ exports.applicationsUpdate = async (req, res,) => {
                     title: title,
                     paragraph: paragraph,
                 }
-                const data = await Applications.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Applications.findByIdAndUpdate({ _id: applicationsData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
             } else {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {}, });

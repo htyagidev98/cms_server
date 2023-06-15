@@ -10,8 +10,8 @@ exports.nominatorAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let NominatorData = await Nominator.findOne({ title: title }).lean();
-            if (!NominatorData) {
+            let nominatorData = await Nominator.findOne({ title: title }).lean();
+            if (!nominatorData) {
                 let data = await Nominator.create({
                     title: title,
                     paragraph: paragraph,
@@ -29,7 +29,7 @@ exports.nominatorAdd = async (req, res) => {
 
 exports.nominatorGet = async (req, res) => {
     try {
-        const contentlist = await Nominator.findOne().sort({ createdAt: 1 });
+        const contentlist = await Nominator.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -57,15 +57,15 @@ exports.nominatorUpdate = async (req, res) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let NominatorData = await Nominator.findById(_id).lean();
-            if (!NominatorData) {
+            let nominatorData = await Nominator.findById(_id).lean();
+            if (!nominatorData) {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
             } else {
                 const updatedData = {
                     title: title,
                     paragraph: paragraph,
                 };
-                const data = await Nominator.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Nominator.findByIdAndUpdate({ _id: nominatorData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }

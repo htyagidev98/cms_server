@@ -47,8 +47,7 @@ exports.featureContentAdd = async (req, res, images) => {
 
 exports.featureContentGet = async (req, res) => {
     try {
-        const contentlist = await Feature.findOne().sort({ createdAt: -1 });
-        console.log("data", contentlist.logoData)
+        const contentlist = await Feature.findOne().lean();
         if (contentlist) {
             let image_data = contentlist.logoData;
             if (image_data.length > 0) {
@@ -90,7 +89,7 @@ exports.featureContentUpdate = async (req, res, images) => {
         logoData.push({
             image_url: result.secure_url,
             image_id: result.public_id,
-            image_name:result.original_filename
+            image_name: result.original_filename
         });
 
         let data = await Feature.findOneAndUpdate(

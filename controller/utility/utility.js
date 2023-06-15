@@ -32,7 +32,7 @@ exports.utilityAdd = async (req, res) => {
 
 exports.utilityGet = async (req, res) => {
     try {
-        const contentlist = await Utility.findOne().sort({ createdAt: 1 });
+        const contentlist = await Utility.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -65,7 +65,7 @@ exports.utilityUpdate = async (req, res,) => {
                     title: title,
                     paragraph: paragraph,
                 }
-                const data = await Utility.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Utility.findByIdAndUpdate({ _id: utilityData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
             } else {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {}, });

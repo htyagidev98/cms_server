@@ -12,8 +12,8 @@ exports.purposeCardAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let PurposeCardData = await PurposeCard.findOne({ title: title }).lean();
-            if (!PurposeCardData) {
+            let purposeData = await PurposeCard.findOne({ title: title }).lean();
+            if (!purposeData) {
 
                 let data = await PurposeCard.create({
                     title: title,
@@ -64,8 +64,8 @@ exports.purposeCardUpdate = async (req, res,) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let PurposeCardData = await PurposeCard.findById(_id).lean();
-            if (PurposeCardData) {
+            let purposeData = await PurposeCard.findById(_id).lean();
+            if (purposeData) {
                 let updatedData = {
                     title: title,
                     paragraph: paragraph,

@@ -10,8 +10,8 @@ exports.availableAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, content, paragraph } = req.body;
-            let AvailableData = await Available.findOne({ title: title }).lean();
-            if (!AvailableData) {
+            let availableData = await Available.findOne({ title: title }).lean();
+            if (!availableData) {
                 let data = await Available.create({
                     title: title,
                     content: content,
@@ -30,7 +30,7 @@ exports.availableAdd = async (req, res) => {
 
 exports.availableGet = async (req, res) => {
     try {
-        const contentlist = await Available.findOne().sort({ createdAt: 1 });
+        const contentlist = await Available.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -59,8 +59,8 @@ exports.availableUpdate = async (req, res) => {
         } else {
             const { title, content, paragraph } = req.body;
             const { _id } = req.query;
-            let AvailableData = await Available.findById(_id).lean();
-            if (!AvailableData) {
+            let availableData = await Available.findById(_id).lean();
+            if (!availableData) {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
             } else {
                 const updatedData = {
@@ -68,7 +68,7 @@ exports.availableUpdate = async (req, res) => {
                     content: content,
                     paragraph: paragraph,
                 };
-                const data = await Available.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Available.findByIdAndUpdate({ _id: availableData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }

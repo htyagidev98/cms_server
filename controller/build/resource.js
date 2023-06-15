@@ -10,8 +10,8 @@ exports.resourceAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let ResourceData = await Resource.findOne({ title: title }).lean();
-            if (!ResourceData) {
+            let resourceData = await Resource.findOne({ title: title }).lean();
+            if (!resourceData) {
                 let data = await Resource.create({
                     title: title,
                     paragraph: paragraph,
@@ -57,15 +57,15 @@ exports.resourceUpdate = async (req, res) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let ResourceData = await Resource.findById(_id).lean();
-            if (!ResourceData) {
+            let resourceData = await Resource.findById(_id).lean();
+            if (!resourceData) {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
             } else {
                 const updatedData = {
                     title: title,
                     paragraph: paragraph,
                 };
-                const data = await Resource.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Resource.findByIdAndUpdate({ _id: resourceData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }

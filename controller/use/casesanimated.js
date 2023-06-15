@@ -35,7 +35,7 @@ exports.casesAnimatedGet = async (req, res) => {
         const contentlist = await Cases.find().sort({ createdAt: 1 });
         if (contentlist && contentlist.length > 0) {
             let casesAnimatedData = []
-            contentlist.forEach(content=>{
+            contentlist.forEach(content => {
                 const contentObj = {
                     _id: content._id,
                     title: content.title,
@@ -69,7 +69,7 @@ exports.casesAnimatedUpdate = async (req, res,) => {
                     title: title,
                     paragraph: paragraph,
                 }
-                const data = await Cases.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Cases.findByIdAndUpdate({ _id: casesData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
             } else {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {}, });

@@ -32,22 +32,22 @@ exports.scalabilityAdd = async (req, res) => {
 
 exports.scalabilityGet = async (req, res) => {
     try {
-    const contentlist = await Scalability.find().sort({ createdAt: 1 });
-    if (contentlist && contentlist.length > 0) {
-        const scalabilityData = []
-        contentlist.forEach(content => {
-            const contentObj = {
-                _id: content._id,
-                title: content.title,
-                paragraph: content.paragraph
-            };
-            scalabilityData.push(contentObj);
-        });
-        return res.status(200).json({ responseMessage: "Successfully", responseData: scalabilityData });
+        const contentlist = await Scalability.find().sort({ createdAt: 1 });
+        if (contentlist && contentlist.length > 0) {
+            const scalabilityData = []
+            contentlist.forEach(content => {
+                const contentObj = {
+                    _id: content._id,
+                    title: content.title,
+                    paragraph: content.paragraph
+                };
+                scalabilityData.push(contentObj);
+            });
+            return res.status(200).json({ responseMessage: "Successfully", responseData: scalabilityData });
 
-    } else {
-        return res.status(404).json({ responseMessage: "No Data found", responseData: {} })
-    };
+        } else {
+            return res.status(404).json({ responseMessage: "No Data found", responseData: {} })
+        };
     } catch (err) {
         return res.status(500).json({ responseMessage: " Internal Sever Error", responseData: {} })
     }
@@ -70,7 +70,7 @@ exports.scalabilityUpdate = async (req, res,) => {
                     title: title,
                     paragraph: paragraph,
                 }
-                const data = await Scalability.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Scalability.findByIdAndUpdate({ _id: scalabilityData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
             } else {
                 return res.status(404).json({ esponseMessage: "Data not found", responseData: {}, });

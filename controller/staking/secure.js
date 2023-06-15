@@ -10,8 +10,8 @@ exports.secureContentAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let SecureData = await Secure.findOne({ title: title }).lean();
-            if (!SecureData) {
+            let secureData = await Secure.findOne({ title: title }).lean();
+            if (!secureData) {
                 let data = await Secure.create({
                     title: title,
                     paragraph: paragraph,
@@ -29,7 +29,7 @@ exports.secureContentAdd = async (req, res) => {
 
 exports.secureContentGet = async (req, res) => {
     try {
-        const contentlist = await Secure.findOne().sort({ createdAt: 1 });
+        const contentlist = await Secure.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -57,15 +57,15 @@ exports.secureContentUpdate = async (req, res) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let SecureData = await Secure.findById(_id).lean();
-            if (!SecureData) {
+            let secureData = await Secure.findById(_id).lean();
+            if (!secureData) {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
             } else {
                 const updatedData = {
                     title: title,
                     paragraph: paragraph,
                 };
-                const data = await Secure.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Secure.findByIdAndUpdate({ _id: secureData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }

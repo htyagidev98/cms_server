@@ -12,8 +12,8 @@ exports.criteriaCardAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let CriteriaCardData = await CriteriaCard.findOne({ title: title }).lean();
-            if (!CriteriaCardData) {
+            let criteriaData = await CriteriaCard.findOne({ title: title }).lean();
+            if (!criteriaData) {
 
                 let data = await CriteriaCard.create({
                     title: title,
@@ -64,13 +64,13 @@ exports.criteriaCardUpdate = async (req, res,) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let CriteriaCardData = await CriteriaCard.findById(_id).lean();
-            if (CriteriaCardData) {
+            let criteriaData = await CriteriaCard.findById(_id).lean();
+            if (criteriaData) {
                 let updatedData = {
                     title: title,
                     paragraph: paragraph,
                 }
-                const data = await CriteriaCard.findByIdAndUpdate({ _id: CriteriaCardData._id }, updatedData, { new: true });
+                const data = await CriteriaCard.findByIdAndUpdate({ _id: criteriaData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
             } else {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {}, });

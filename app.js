@@ -14,11 +14,11 @@ var connectDb = () => {
 };
 connectDb();
 
-app.use(bodyParser.json({ limit: "500mb" }));
+app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({
-    limit: "500mb",
+    limit: "50mb",
     extended: true,
-    parameterLimit: 500000,
+    parameterLimit: 50000,
 })
 );
 mongoose.Promise = global.Promise;
@@ -104,11 +104,49 @@ app.use("/build", require("./routes/supporterCard"))
 //API ROUTES for Dev portal-page
 app.use("/dev", require("./routes/portal"));
 app.use("/dev", require("./routes/zero"));
-app.use("/dev", require("./routes/zeroCard"))
-app.use("/dev", require("./routes/powered"))
+app.use("/dev", require("./routes/zeroCard"));
+app.use("/dev", require("./routes/powered"));
+app.use("/dev", require("./routes/poweredCard"));
+app.use("/dev", require("./routes/developer"));
+app.use("/dev", require("./routes/tutorials"));
+app.use("/dev", require("./routes/tutorialCard"));
+app.use("/dev", require("./routes/tools"));
+app.use("/dev", require("./routes/toolsCard"));
+app.use("/dev", require("./routes/additional"));
+app.use("/dev", require("./routes/additionalCard"));
+app.use("/dev", require("./routes/stay"));
+app.use("/dev", require("./routes/stayCard"));
+app.use("/dev", require("./routes/program"))
 
 
+//API ROUTES for Dev portal-page
+app.use("/community-page", require("./routes/social"));
+app.use("/community-page", require("./routes/platforms"));
+app.use("/community-page", require("./routes/ambassador"));
+app.use("/community-page", require("./routes/fundingNew"));
+app.use("/community-page", require("./routes/bounty"));
+app.use("/community-page", require("./routes/news"));
+app.use("/community-page", require("./routes/newsCard"));
+app.use("/community-page", require("./routes/video"));
+app.use("/community-page", require("./routes/videoCard"))
 
+//API ROUTES for upcoming-event-page
+app.use("/upcoming-events", require("./routes/event"));
+app.use("/upcoming-events", require("./routes/eventCard"));
+app.use("/upcoming-events", require("./routes/galleryCard"))
+
+//API ROUTES for Ambassador-page
+app.use("/ambassador", require("./routes/ambassadorProgram"));
+app.use("/ambassador", require("./routes/background"));
+app.use("/ambassador", require("./routes/looking"));
+app.use("/ambassador", require("./routes/lookingCard"));
+app.use("/ambassador", require("./routes/perks"));
+app.use("/ambassador", require("./routes/perksCard"));
+app.use("/ambassador", require("./routes/require"));
+app.use("/ambassador", require("./routes/requireCard"));
+
+//API ROUTES for Press/mediakit-page
+app.use("/press", require("./routes/press"));
 
 
 

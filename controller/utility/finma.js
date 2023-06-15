@@ -32,7 +32,7 @@ exports.finmaAdd = async (req, res) => {
 
 exports.finmaGet = async (req, res) => {
     try {
-        const contentlist = await Finma.findOne().sort({ createdAt: 1 });
+        const contentlist = await Finma.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -65,7 +65,7 @@ exports.finmaUpdate = async (req, res,) => {
                     title: title,
                     paragraph: paragraph,
                 }
-                const data = await Finma.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Finma.findByIdAndUpdate({ _id: finmaData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
             } else {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {}, });

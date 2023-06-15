@@ -32,7 +32,7 @@ exports.azeroUtilityAdd = async (req, res) => {
 
 exports.azeroUtilityGet = async (req, res) => {
     try {
-        const contentlist = await Azero.findOne().sort({ createdAt: 1 });
+        const contentlist = await Azero.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -65,7 +65,7 @@ exports.azeroUtilityUpdate = async (req, res,) => {
                     title: title,
                     paragraph: paragraph,
                 }
-                const data = await Azero.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Azero.findByIdAndUpdate({ _id: azeroData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
             } else {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {}, });

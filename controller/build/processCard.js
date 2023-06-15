@@ -12,8 +12,8 @@ exports.processCardAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let ProcessCardData = await ProcessCard.findOne({ title: title }).lean();
-            if (!ProcessCardData) {
+            let processData = await ProcessCard.findOne({ title: title }).lean();
+            if (!processData) {
 
                 let data = await ProcessCard.create({
                     title: title,
@@ -64,13 +64,13 @@ exports.processCardUpdate = async (req, res,) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let ProcessCardData = await ProcessCard.findById(_id).lean();
-            if (ProcessCardData) {
+            let processData = await ProcessCard.findById(_id).lean();
+            if (processData) {
                 let updatedData = {
                     title: title,
                     paragraph: paragraph,
                 }
-                const data = await ProcessCard.findByIdAndUpdate({ _id: ProcessCardData._id }, updatedData, { new: true });
+                const data = await ProcessCard.findByIdAndUpdate({ _id: processData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
             } else {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {}, });

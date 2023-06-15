@@ -10,8 +10,8 @@ exports.requestCardAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title } = req.body;
-            let RequestCardData = await RequestCard.findOne({ title: title }).lean();
-            if (!RequestCardData) {
+            let requestData = await RequestCard.findOne({ title: title }).lean();
+            if (!requestData) {
                 let data = await RequestCard.create({
                     title: title
                 });
@@ -30,16 +30,16 @@ exports.requestCardGet = async (req, res) => {
     try {
         const contentlist = await RequestCard.find().sort({ createdAt: 1 });
         if (contentlist && contentlist.length > 0) {
-            let RequestCardData = []
+            let requestData = []
             contentlist.forEach(content => {
                 const contentObj = {
                     _id: content._id,
                     title: content.title
                 };
-                RequestCardData.push(contentObj);
+                requestData.push(contentObj);
             })
 
-            return res.status(200).json({ responseMessage: "Successfully", responseData: RequestCardData });
+            return res.status(200).json({ responseMessage: "Successfully", responseData: requestData });
         } else {
             return res.status(404).json({ responseMessage: "No Data found", responseData: {} })
         };
@@ -60,14 +60,14 @@ exports.requestCardUpdate = async (req, res) => {
         } else {
             const { title } = req.body;
             const { _id } = req.query;
-            let RequestCardData = await RequestCard.findById(_id).lean();
-            if (!RequestCardData) {
+            let requestData = await RequestCard.findById(_id).lean();
+            if (!requestData) {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
             } else {
                 const updatedData = {
                     title: title
                 };
-                const data = await RequestCard.findByIdAndUpdate({ _id: RequestCardData._id }, updatedData, { new: true });
+                const data = await RequestCard.findByIdAndUpdate({ _id: requestData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }

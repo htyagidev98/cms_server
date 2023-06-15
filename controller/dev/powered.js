@@ -12,8 +12,8 @@ exports.poweredAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let PoweredData = await Powered.findOne({ title: title }).lean();
-            if (!PoweredData) {
+            let poweredData = await Powered.findOne({ title: title }).lean();
+            if (!poweredData) {
 
                 let data = await Powered.create({
                     title: title,
@@ -32,7 +32,7 @@ exports.poweredAdd = async (req, res) => {
 
 exports.poweredGet = async (req, res) => {
     try {
-        const contentlist = await Powered.findOne().sort({ createdAt: 1 });
+        const contentlist = await Powered.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -59,13 +59,13 @@ exports.poweredUpdate = async (req, res,) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let PoweredData = await Powered.findById(_id).lean();
-            if (PoweredData) {
+            let poweredData = await Powered.findById(_id).lean();
+            if (poweredData) {
                 let updatedData = {
                     title: title,
                     paragraph: paragraph,
                 }
-                const data = await Powered.findByIdAndUpdate({ _id: PoweredData._id }, updatedData, { new: true });
+                const data = await Powered.findByIdAndUpdate({ _id: poweredData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
             } else {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {}, });

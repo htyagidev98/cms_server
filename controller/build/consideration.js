@@ -10,8 +10,8 @@ exports.considerationAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let ConsiderationData = await Consideration.findOne({ title: title }).lean();
-            if (!ConsiderationData) {
+            let considerationData = await Consideration.findOne({ title: title }).lean();
+            if (!considerationData) {
                 let data = await Consideration.create({
                     title: title,
                     paragraph: paragraph,
@@ -29,7 +29,7 @@ exports.considerationAdd = async (req, res) => {
 
 exports.considerationGet = async (req, res) => {
     try {
-        const contentlist = await Consideration.findOne().sort({ createdAt: 1 });
+        const contentlist = await Consideration.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -57,15 +57,15 @@ exports.considerationUpdate = async (req, res) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let ConsiderationData = await Consideration.findById(_id).lean();
-            if (!ConsiderationData) {
+            let considerationData = await Consideration.findById(_id).lean();
+            if (!considerationData) {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
             } else {
                 const updatedData = {
                     title: title,
                     paragraph: paragraph,
                 };
-                const data = await Consideration.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Consideration.findByIdAndUpdate({ _id: considerationData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }

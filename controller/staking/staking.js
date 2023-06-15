@@ -10,8 +10,8 @@ exports.stakingContentAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let StakingData = await Staking.findOne({ title: title }).lean();
-            if (!StakingData) {
+            let stakingData = await Staking.findOne({ title: title }).lean();
+            if (!stakingData) {
                 let data = await Staking.create({
                     title: title,
                     paragraph: paragraph,
@@ -29,7 +29,7 @@ exports.stakingContentAdd = async (req, res) => {
 
 exports.stakingContentGet = async (req, res) => {
     try {
-        const contentlist = await Staking.findOne().sort({ createdAt: 1 });
+        const contentlist = await Staking.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -57,15 +57,15 @@ exports.stakingContentUpdate = async (req, res) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let StakingData = await Staking.findById(_id).lean();
-            if (!StakingData) {
+            let stakingData = await Staking.findById(_id).lean();
+            if (!stakingData) {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
             } else {
                 const updatedData = {
                     title: title,
                     paragraph: paragraph,
                 };
-                const data = await Staking.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Staking.findByIdAndUpdate({ _id: stakingData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }

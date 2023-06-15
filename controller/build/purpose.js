@@ -10,8 +10,8 @@ exports.purposeAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let PurposeData = await Purpose.findOne({ title: title }).lean();
-            if (!PurposeData) {
+            let purposeData = await Purpose.findOne({ title: title }).lean();
+            if (!purposeData) {
                 let data = await Purpose.create({
                     title: title,
                     paragraph: paragraph,
@@ -29,7 +29,7 @@ exports.purposeAdd = async (req, res) => {
 
 exports.purposeGet = async (req, res) => {
     try {
-        const contentlist = await Purpose.findOne().sort({ createdAt: 1 });
+        const contentlist = await Purpose.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -57,15 +57,15 @@ exports.purposeUpdate = async (req, res) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let PurposeData = await Purpose.findById(_id).lean();
-            if (!PurposeData) {
+            let purposeData = await Purpose.findById(_id).lean();
+            if (!purposeData) {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
             } else {
                 const updatedData = {
                     title: title,
                     paragraph: paragraph,
                 };
-                const data = await Purpose.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Purpose.findByIdAndUpdate({ _id: purposeData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }

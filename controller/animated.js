@@ -84,7 +84,7 @@ exports.animatedUpdate = async (req, res) => {
                     title: title,
                     paragraph: paragraph
                 };
-                const data = await Animated.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Animated.findByIdAndUpdate({ _id: animatedData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }

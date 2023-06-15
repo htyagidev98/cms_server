@@ -69,7 +69,7 @@ exports.countUpdate = async (req, res,) => {
                     title: title,
                     content: content,
                 }
-                const data = await Count.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Count.findByIdAndUpdate({ _id: countData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
             } else {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {}, });

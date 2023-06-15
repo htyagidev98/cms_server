@@ -11,8 +11,8 @@ exports.drivingTextAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let drivingTextData = await DrivingText.findOne({ title: title }).lean();
-            if (!drivingTextData) {
+            let textData = await DrivingText.findOne({ title: title }).lean();
+            if (!textData) {
 
                 let data = await DrivingText.create({
                     title: title,
@@ -31,7 +31,7 @@ exports.drivingTextAdd = async (req, res) => {
 
 exports.drivingTextGet = async (req, res) => {
     try {
-        const contentlist = await DrivingText.findOne().sort({ createdAt: 1 });
+        const contentlist = await DrivingText.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -58,13 +58,13 @@ exports.drivingTextUpdate = async (req, res,) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let drivingTextData = await DrivingText.findById(_id).lean();
-            if (drivingTextData) {
+            let textData = await DrivingText.findById(_id).lean();
+            if (textData) {
                 let updatedData = {
                     title: title,
                     paragraph: paragraph
                 }
-                const data = await DrivingText.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await DrivingText.findByIdAndUpdate({ _id: textData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
             } else {
                 return res.status(404).json({ esponseMessage: "feature not found", responseData: {}, });

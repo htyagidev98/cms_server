@@ -32,7 +32,7 @@ exports.mechanismAdd = async (req, res) => {
 
 exports.mechanismGet = async (req, res) => {
     try {
-        const contentlist = await Mechanism.findOne().sort({ createdAt: 1 });
+        const contentlist = await Mechanism.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -59,13 +59,13 @@ exports.mechanismUpdate = async (req, res,) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let MechanismData = await Mechanism.findById(_id).lean();
-            if (MechanismData) {
+            let mechanismData = await Mechanism.findById(_id).lean();
+            if (mechanismData) {
                 let updatedData = {
                     title: title,
                     paragraph: paragraph,
                 }
-                const data = await Mechanism.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Mechanism.findByIdAndUpdate({ _id: mechanismData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
             } else {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {}, });

@@ -31,7 +31,7 @@ exports.networkAdd = async (req, res) => {
 
 exports.networkGet = async (req, res) => {
     try {
-        const contentlist = await Network.findOne().sort({ createdAt: 1 });
+        const contentlist = await Network.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -66,7 +66,7 @@ exports.networkUpdate = async (req, res,) => {
                 const updatedData = {
                     title: title,
                 };
-                const data = await Network.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Network.findByIdAndUpdate({ _id: networkData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }

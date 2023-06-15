@@ -12,8 +12,8 @@ exports.zeroAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let ZeroData = await Zero.findOne({ title: title }).lean();
-            if (!ZeroData) {
+            let zeroData = await Zero.findOne({ title: title }).lean();
+            if (!zeroData) {
 
                 let data = await Zero.create({
                     title: title,
@@ -32,7 +32,7 @@ exports.zeroAdd = async (req, res) => {
 
 exports.zeroGet = async (req, res) => {
     try {
-        const contentlist = await Zero.findOne().sort({ createdAt: 1 });
+        const contentlist = await Zero.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -59,13 +59,13 @@ exports.zeroUpdate = async (req, res,) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let ZeroData = await Zero.findById(_id).lean();
-            if (ZeroData) {
+            let zeroData = await Zero.findById(_id).lean();
+            if (zeroData) {
                 let updatedData = {
                     title: title,
                     paragraph: paragraph,
                 }
-                const data = await Zero.findByIdAndUpdate({ _id: ZeroData._id }, updatedData, { new: true });
+                const data = await Zero.findByIdAndUpdate({ _id: zeroData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
             } else {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {}, });

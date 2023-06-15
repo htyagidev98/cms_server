@@ -30,7 +30,7 @@ exports.communityAdd = async (req, res) => {
 
 exports.communityGet = async (req, res) => {
     try {
-        const contentlist = await Community.findOne().sort({ createdAt: 1 });
+        const contentlist = await Community.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -47,7 +47,7 @@ exports.communityGet = async (req, res) => {
 };
 
 exports.communityUpdate = async (req, res) => {
-    // try {
+    try {
     const rules = { title: "required", paragraph: "required" };
     const validation = new Validator(req.body, rules);
 
@@ -66,12 +66,12 @@ exports.communityUpdate = async (req, res) => {
                 title: title,
                 paragraph: paragraph
             };
-            const data = await Community.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+            const data = await Community.findByIdAndUpdate({ _id: communityData._id }, updatedData, { new: true });
 
             return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
         }
     }
-    // } catch (err) {
-    //     return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {} });
-    // }
+    } catch (err) {
+        return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {} });
+    }
 };

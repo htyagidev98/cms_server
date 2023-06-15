@@ -2,7 +2,7 @@ const Home = require('../models/home')
 bodyParser = require("body-parser")
 Validator = require("validatorjs")
 
-exports.heroContentAdd = async (req, res, images) => {
+exports.heroContentAdd = async (req, res) => {
     try {
         const rules = { title: "required", paragraph: "required" };
         var validation = new Validator(req.body, rules);
@@ -29,7 +29,7 @@ exports.heroContentAdd = async (req, res, images) => {
 
 exports.heroContentGet = async (req, res) => {
     try {
-        const contentlist = await Home.findOne().sort({ createdAt: 1 });
+        const contentlist = await Home.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -45,7 +45,7 @@ exports.heroContentGet = async (req, res) => {
     }
 };
 
-exports.heroContentUpdate = async (req, res, images) => {
+exports.heroContentUpdate = async (req, res) => {
     try {
         const rules = { title: "required", paragraph: "required" };
         const validation = new Validator(req.body, rules);
@@ -65,7 +65,7 @@ exports.heroContentUpdate = async (req, res, images) => {
                     title: title,
                     paragraph: paragraph,
                 };
-                const data = await Home.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Home.findByIdAndUpdate({ _id: homeData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }

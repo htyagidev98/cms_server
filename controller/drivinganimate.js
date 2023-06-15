@@ -10,8 +10,8 @@ exports.drivingAnimateAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title } = req.body;
-            let DrivingAnimateData = await DrivingAnimate.findOne({ title: title }).lean();
-            if (!DrivingAnimateData) {
+            let drivingData = await DrivingAnimate.findOne({ title: title }).lean();
+            if (!drivingData) {
                 let data = await DrivingAnimate.create({
                     title: title,
                 });
@@ -62,28 +62,30 @@ exports.drivingAnimateGetById = async (req, res) => {
 }
 
 exports.drivingAnimateUpdate = async (req, res) => {
-    // try {
+    try {
         const rules = { title: "required" };
         const validation = new Validator(req.body, rules);
 
         if (validation.fails()) {
-            return res.status(422).json({responseMessage: "Validation Error", responseData: validation.errors.all(),
+            return res.status(422).json({
+                responseMessage: "Validation Error", responseData: validation.errors.all(),
             });
         } else {
             const { title } = req.body;
             const { _id } = req.query;
-            let drivingAnimateData = await DrivingAnimate.findById(_id).lean();
-            if (!drivingAnimateData) {
+            let drivingData = await DrivingAnimate.findById(_id).lean();
+            if (!drivingData) {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
             } else {
                 const updatedData = {
-                    title: title,                };
-                const data = await DrivingAnimate.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                    title: title,
+                };
+                const data = await DrivingAnimate.findByIdAndUpdate({ _id: drivingData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }
         }
-    // } catch (err) {
-    //     return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {} });
-    // }
+    } catch (err) {
+        return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {} });
+    }
 };

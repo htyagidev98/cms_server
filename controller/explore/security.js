@@ -70,7 +70,7 @@ exports.securityUpdate = async (req, res,) => {
                     title: title,
                     paragraph: paragraph,
                 }
-                const data = await Security.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Security.findByIdAndUpdate({ _id: securityData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
             } else {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {}, });

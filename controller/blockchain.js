@@ -30,7 +30,7 @@ exports.blockchainAdd = async (req, res) => {
 
 exports.blockchainGet = async (req, res) => {
     try {
-        const contentlist = await Blockchain.findOne().sort({ createdAt: 1 });
+        const contentlist = await Blockchain.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -56,12 +56,12 @@ exports.blockchainContentUpdate = async (req, res, images) => {
         } else {
             const { title } = req.body;
             const { _id } = req.query;
-            let BlockchainData = await Blockchain.findById(_id).lean();
-            if (!BlockchainData) {
+            let blockchainData = await Blockchain.findById(_id).lean();
+            if (!blockchainData) {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
             } else {
                 const updatedData = { title: title };
-                const data = await Blockchain.findByIdAndUpdate({ _id: BlockchainData._id }, updatedData, { new: true });
+                const data = await Blockchain.findByIdAndUpdate({ _id: blockchainData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }
         }

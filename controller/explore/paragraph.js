@@ -31,7 +31,7 @@ exports.paragraphAdd = async (req, res) => {
 
 exports.paragraphGet = async (req, res) => {
     try {
-        const contentlist = await Paragraph.findOne().sort({ createdAt: 1 });
+        const contentlist = await Paragraph.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -62,7 +62,7 @@ exports.paragraphUpdate = async (req, res,) => {
                 let updatedData = {
                     paragraph: paragraph,
                 }
-                const data = await Paragraph.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Paragraph.findByIdAndUpdate({ _id: paragraphData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
             } else {
                 return res.status(404).json({ esponseMessage: "feature not found", responseData: {}, });

@@ -32,7 +32,7 @@ exports.blockoviaAdd = async (req, res) => {
 
 exports.blockoviaGet = async (req, res) => {
     try {
-        const contentlist = await Blockovia.findOne().sort({ createdAt: 1 });
+        const contentlist = await Blockovia.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -65,7 +65,7 @@ exports.blockoviaUpdate = async (req, res,) => {
                     title: title,
                     paragraph: paragraph,
                 }
-                const data = await Blockovia.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Blockovia.findByIdAndUpdate({ _id: blockoviaData._id }, updatedData, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully Updated", responseData: data });
             } else {
                 return res.status(404).json({ esponseMessage: "feature not found", responseData: {}, });

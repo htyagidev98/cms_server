@@ -11,8 +11,8 @@ exports.footprintAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title} = req.body;
-            let networkData = await Footprint.findOne({ title: title }).lean();
-            if (!networkData) {
+            let footData = await Footprint.findOne({ title: title }).lean();
+            if (!footData) {
                 let data = await Footprint.create({
                     title: title
                 });
@@ -29,7 +29,7 @@ exports.footprintAdd = async (req, res) => {
 
 exports.footprintGet = async (req, res) => {
     try {
-        const contentlist = await Footprint.findOne().sort({ createdAt: -1 });
+        const contentlist = await Footprint.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -56,15 +56,15 @@ exports.footprintUpdate = async (req, res) => {
     } else {
         const { title} = req.body;
         const { _id } = req.query;
-        let footprintData = await Footprint.findById(_id).lean();
-        if (!footprintData) {
+        let footData = await Footprint.findById(_id).lean();
+        if (!footData) {
             return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
         } else {
            
             const updatedData = {
                 title: title
             };
-            const data = await Footprint.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+            const data = await Footprint.findByIdAndUpdate({ _id: footData._id }, updatedData, { new: true });
 
             return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
         }

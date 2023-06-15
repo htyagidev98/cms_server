@@ -10,8 +10,8 @@ exports.requestAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let RequestData = await Request.findOne({ title: title }).lean();
-            if (!RequestData) {
+            let requestData = await Request.findOne({ title: title }).lean();
+            if (!requestData) {
                 let data = await Request.create({
                     title: title,
                     paragraph: paragraph,
@@ -29,7 +29,7 @@ exports.requestAdd = async (req, res) => {
 
 exports.requestGet = async (req, res) => {
     try {
-        const contentlist = await Request.findOne().sort({ createdAt: 1 });
+        const contentlist = await Request.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -57,15 +57,15 @@ exports.requestUpdate = async (req, res) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let RequestData = await Request.findById(_id).lean();
-            if (!RequestData) {
+            let requestData = await Request.findById(_id).lean();
+            if (!requestData) {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
             } else {
                 const updatedData = {
                     title: title,
                     paragraph: paragraph,
                 };
-                const data = await Request.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await Request.findByIdAndUpdate({ _id: requestData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }

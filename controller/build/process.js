@@ -10,8 +10,8 @@ exports.processAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let ProcessData = await Process.findOne({ title: title }).lean();
-            if (!ProcessData) {
+            let processData = await Process.findOne({ title: title }).lean();
+            if (!processData) {
                 let data = await Process.create({
                     title: title,
                     paragraph: paragraph,
@@ -29,7 +29,7 @@ exports.processAdd = async (req, res) => {
 
 exports.processGet = async (req, res) => {
     try {
-        const contentlist = await Process.findOne().sort({ createdAt: 1 });
+        const contentlist = await Process.findOne().lean();
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -57,15 +57,15 @@ exports.processUpdate = async (req, res) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let ProcessData = await Process.findById(_id).lean();
-            if (!ProcessData) {
+            let processData = await Process.findById(_id).lean();
+            if (!processData) {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
             } else {
                 const updatedData = {
                     title: title,
                     paragraph: paragraph,
                 };
-                const data = await Process.findByIdAndUpdate({ _id: ProcessData._id }, updatedData, { new: true });
+                const data = await Process.findByIdAndUpdate({ _id: processData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }

@@ -11,8 +11,8 @@ exports.animatedCardAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let animatedCardData = await AnimatedCard.findOne({ title: title }).lean();
-            if (!animatedCardData) {
+            let cardData = await AnimatedCard.findOne({ title: title }).lean();
+            if (!cardData) {
                 let data = await AnimatedCard.create({
                     title: title,
                     paragraph: paragraph
@@ -32,16 +32,16 @@ exports.animatedCardGet = async (req, res) => {
     try {
         const contentlist = await AnimatedCard.find().sort({ createdAt: 1 });
         if (contentlist && contentlist.length > 0) {
-            let animatedCardData = [];
+            let cardData = [];
             contentlist.forEach(content => {
                 const contentObj = {
                     _id: content._id,
                     title: content.title,
                     paragraph: content.paragraph,
                 };
-                animatedCardData.push(contentObj);
+                cardData.push(contentObj);
             });
-            return res.status(200).json({ responseMessage: "Successfully", responseData: animatedCardData });
+            return res.status(200).json({ responseMessage: "Successfully", responseData: cardData });
         } else {
             return res.status(404).json({ responseMessage: "No Data found", responseData: {} })
         };
@@ -76,8 +76,8 @@ exports.animatedCardUpdate = async (req, res) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let animatedData = await AnimatedCard.findById(_id).lean();
-            if (!animatedData) {
+            let cardData = await AnimatedCard.findById(_id).lean();
+            if (!cardData) {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
             } else {
                 const updatedData = {
@@ -85,7 +85,7 @@ exports.animatedCardUpdate = async (req, res) => {
                     paragraph: paragraph
 
                 };
-                const data = await AnimatedCard.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await AnimatedCard.findByIdAndUpdate({ _id: cardData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }

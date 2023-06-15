@@ -10,8 +10,8 @@ exports.ecosystemCardAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let EcosystemCardData = await EcosystemCard.findOne({ title: title }).lean();
-            if (!EcosystemCardData) {
+            let ecosystemData = await EcosystemCard.findOne({ title: title }).lean();
+            if (!ecosystemData) {
                 let data = await EcosystemCard.create({
                     title: title,
                     paragraph: paragraph,
@@ -61,15 +61,15 @@ exports.ecosystemCardUpdate = async (req, res) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let EcosystemCardData = await EcosystemCard.findById(_id).lean();
-            if (!EcosystemCardData) {
+            let ecosystemData = await EcosystemCard.findById(_id).lean();
+            if (!ecosystemData) {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
             } else {
                 const updatedData = {
                     title: title,
                     paragraph: paragraph,
                 };
-                const data = await EcosystemCard.findByIdAndUpdate({ _id: _id }, updatedData, { new: true });
+                const data = await EcosystemCard.findByIdAndUpdate({ _id: ecosystemData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }

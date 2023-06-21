@@ -10,6 +10,7 @@ cloudinary.config({
     api_secret: 'uTuU6iIGtleSOIbtZDO_x5hPErc'
 });
 
+
 exports.featureContentAdd = async (req, res, images) => {
     try {
         const rules = { title: "required" };
@@ -18,7 +19,7 @@ exports.featureContentAdd = async (req, res, images) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title } = req.body;
-            const featureData = await Feature.findOne({ title: title }).lean();
+            let featureData = await Feature.findOne({ title: title }).lean();
             if (!featureData) {
                 let logoData = [];
                 let result = await cloudinary.uploader.upload(req.file.path, {
@@ -37,13 +38,25 @@ exports.featureContentAdd = async (req, res, images) => {
                 });
                 return res.status(200).json({ responseMessage: "Successfully", responseData: { data }, });
             } else {
-                return res.status(403).json({ responseMessage: "Data  Exist", responseData: {} });
+                let result = await cloudinary.uploader.upload(req.file.path, {
+                    images,
+                    overwrite: true,
+                    faces: false,
+                });
+                featureData.logoData.push({
+                    image_url: result.secure_url,
+                    image_id: result.public_id,
+                    image_name: result.original_filename
+                });
+                const featureData = await Feature.findOneAndUpdate({ title: title }, { logoData: featureData.logoData }, { new: true });
+                return res.status(200).json({ responseMessage: "Successfully", responseData: { featureData }, });
             }
         }
     } catch (err) {
-        return res.status(500).json({ responseMessage: " Internal Sever Error", responseData: {} })
+        return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {} })
     }
 }
+
 
 exports.featureContentGet = async (req, res) => {
     try {
@@ -79,28 +92,152 @@ exports.featureContentGet = async (req, res) => {
 
 exports.featureContentUpdate = async (req, res, images) => {
     try {
-        const { title } = req.body;
-        let logoData = [];
-        let result = await cloudinary.uploader.upload(req.file.path, {
-            images,
-            overwrite: true,
-            faces: false,
-        });
-        logoData.push({
-            image_url: result.secure_url,
-            image_id: result.public_id,
-            image_name: result.original_filename
-        });
+        const rules = { title: "required" };
+        const validation = new Validator(req.body, rules);
 
-        let data = await Feature.findOneAndUpdate(
-            { title: title },
-            { $push: { logoData: logoData } },
-            { new: true, upsert: true }
-        );
+        if (validation.fails()) {
+            return res.status(422).json({
+                responseMessage: "Validation Error",
+                responseData: validation.errors.all(),
+            });
+        } else {
+            const { title } = req.body;
+            const { _id } = req.query;
+            let Data = await Feature.findById(_id).lean();
+            if (!Data) {
+                return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
+            } else {
+                let logoData = [];
 
-        return res.status(200).json({ responseMessage: "Successfully", responseData: { data }, });
+                // Check if file is uploaded and process it
+                if (req.file) {
+                    let result = await cloudinary.uploader.upload(req.file.path, {
+                        images,
+                        overwrite: true,
+                        faces: false,
+                    });
+                    logoData.push({
+                        image_url: result.secure_url,
+                        image_id: result.public_id,
+                        image_name: result.original_filename
+                    });
+                }
+
+                const updatedData = {
+                    title: title
+                }
+
+                // Update title and/or images based on their availability
+                let data = await Feature.findByIdAndUpdate(
+                    { _id: Data._id },
+                    { $set: updatedData },
+                    { new: true }
+                );
+
+                // If images are available, push the new images to logoData array
+                if (logoData.length > 0) {
+                    data.logoData.push(...logoData);
+                    await data.save();
+                }
+
+                return res.status(200).json({ responseMessage: "Successfully", responseData: { data }, });
+            }
+        }
     } catch (err) {
         return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {}, });
     }
 };
 
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////
+// exports.featureContentAdd = async (req, res, images) => {
+//     try {
+//         const rules = { title: "required" };
+//         var validation = new Validator(req.body, rules)
+//         if (validation.fails()) {
+//             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
+//         } else {
+//             const { title } = req.body;
+//             const featureData = await Feature.findOne({ title: title }).lean();
+//             if (!featureData) {
+//                 let logoData = [];
+//                 let result = await cloudinary.uploader.upload(req.file.path, {
+//                     images,
+//                     overwrite: true,
+//                     faces: false,
+//                 });
+//                 logoData.push({
+//                     image_url: result.secure_url,
+//                     image_id: result.public_id,
+//                     image_name: result.original_filename
+//                 });
+//                 let data = await Feature.create({
+//                     title: title,
+//                     logoData: logoData
+//                 });
+//                 return res.status(200).json({ responseMessage: "Successfully", responseData: { data }, });
+//             } else {
+//                 return res.status(403).json({ responseMessage: "Data  Exist", responseData: {} });
+//             }
+//         }
+//     } catch (err) {
+//         return res.status(500).json({ responseMessage: " Internal Sever Error", responseData: {} })
+//     }
+// }
+
+// exports.featureContentUpdate = async (req, res, images) => {
+//     try {
+//         const rules = { title: "required" };
+//         const validation = new Validator(req.body, rules);
+
+//         if (validation.fails()) {
+//             return res.status(422).json({
+//                 responseMessage: "Validation Error",
+//                 responseData: validation.errors.all(),
+//             });
+//         } else {
+//             const { title } = req.body;
+//             const { _id } = req.query;
+//             let Data = await Feature.findById(_id).lean();
+//             if (!Data) {
+//                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
+//             } else {
+//                 let logoData = [];
+//                 let result = await cloudinary.uploader.upload(req.file.path, {
+//                     images,
+//                     overwrite: true,
+//                     faces: false,
+//                 });
+//                 logoData.push({
+//                     image_url: result.secure_url,
+//                     image_id: result.public_id,
+//                     image_name: result.original_filename
+//                 });
+//                 const updatedData = {
+//                     title: title
+//                 }
+//                 let data = await Feature.findByIdAndUpdate(
+//                     { _id: Data._id },
+//                     updatedData,
+//                     { $push: { logoData: logoData } },
+//                     { new: true }
+//                 );
+
+//                 return res.status(200).json({ responseMessage: "Successfully", responseData: { data }, });
+//             }
+//         }
+//     } catch (err) {
+//         return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {}, });
+//     }
+// };
+////////////

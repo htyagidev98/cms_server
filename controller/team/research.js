@@ -1,4 +1,4 @@
-const ImageCard = require('../../models/imageCard')
+const Research = require('../../models/research')
 bodyParser = require("body-parser")
 Validator = require("validatorjs")
 const cloudinary = require('cloudinary').v2;
@@ -9,7 +9,7 @@ cloudinary.config({
     api_secret: 'uTuU6iIGtleSOIbtZDO_x5hPErc'
 });
 
-exports.imageCardAdd = async (req, res, images) => {
+exports.researchAdd = async (req, res, images) => {
     try {
         const rules = { title: "required", paragraph: "required" };
         var validation = new Validator(req.body, rules);
@@ -17,14 +17,14 @@ exports.imageCardAdd = async (req, res, images) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph, } = req.body;
-            let imageData = await ImageCard.findOne({ title: title }).lean();
-            if (!imageData) {
+            let researchData = await Research.findOne({ title: title }).lean();
+            if (!researchData) {
                 let result = await cloudinary.uploader.upload(req.file.path, {
                     images,
                     overwrite: true,
                     faces: false,
                 });
-                let data = await ImageCard.create({
+                let data = await Research.create({
                     title: title,
                     paragraph: paragraph,
                     image_url: result.secure_url,
@@ -41,23 +41,18 @@ exports.imageCardAdd = async (req, res, images) => {
     }
 }
 
-exports.imageCardGet = async (req, res) => {
+exports.researchGet = async (req, res) => {
     try {
-        const contentlist = await ImageCard.find().sort({ createdAt: 1 });
-        if (contentlist && contentlist.length > 0) {
-            let cardData = []
-            contentlist.forEach(content => {
-                const contentObj = {
-                    _id: content._id,
-                    title: content.title,
-                    paragraph: content.paragraph,
-                    image_url: content.image_url,
-                    image_id: content.image_id
-                };
-                cardData.push(contentObj);
-            });
-
-            return res.status(200).json({ responseMessage: "Successfully", responseData: cardData });
+        const contentlist = await Research.findOne().lean();
+        if (contentlist) {
+            let contentObj = {
+                _id: contentlist._id,
+                title: contentlist.title,
+                paragraph: contentlist.paragraph,
+                image_url: contentlist.image_url,
+                image_id: contentlist.image_id
+            };
+            return res.status(200).json({ responseMessage: "Successfully", responseData: contentObj });
         } else {
             return res.status(200).json({ responseMessage: "No Data found", responseData: {} })
         };
@@ -66,8 +61,7 @@ exports.imageCardGet = async (req, res) => {
     }
 };
 
-
-exports.imageCardUpdate = async (req, res, images) => {
+exports.researchUpdate = async (req, res, images) => {
     try {
         const rules = { title: "required", paragraph: "required" };
         const validation = new Validator(req.body, rules);
@@ -80,8 +74,8 @@ exports.imageCardUpdate = async (req, res, images) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let imageData = await ImageCard.findById(_id).lean();
-            if (!imageData) {
+            let researchData = await Research.findById(_id).lean();
+            if (!researchData) {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
             } else {
                 let updatedData = {
@@ -97,26 +91,10 @@ exports.imageCardUpdate = async (req, res, images) => {
                     updatedData.image_url = result.secure_url;
                     updatedData.image_id = result.public_id;
                 }
-                const data = await ImageCard.findByIdAndUpdate({ _id: imageData._id }, updatedData, { new: true });
+                const data = await Research.findByIdAndUpdate({ _id: researchData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }
-        }
-    } catch (err) {
-        return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {} });
-    }
-};
-
-
-exports.imageCardDelete = async (req, res) => {
-    try {
-        const { _id } = req.query;
-        let imageData = await ImageCard.findById(_id).lean();
-        if (imageData) {
-            await ImageCard.findByIdAndDelete({ _id: imageData._id }, imageData, { new: true });
-            return res.status(200).json({ responseMessage: "Deleted Successfully ", responseData: {} });
-        } else {
-            return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
         }
     } catch (err) {
         return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {} });

@@ -1,4 +1,4 @@
-const ImageCard = require('../../models/imageCard')
+const FoundingCard = require('../../models/foundingCard')
 bodyParser = require("body-parser")
 Validator = require("validatorjs")
 const cloudinary = require('cloudinary').v2;
@@ -9,24 +9,26 @@ cloudinary.config({
     api_secret: 'uTuU6iIGtleSOIbtZDO_x5hPErc'
 });
 
-exports.imageCardAdd = async (req, res, images) => {
+exports.foundingCardAdd = async (req, res, images) => {
     try {
-        const rules = { title: "required", paragraph: "required" };
+        const rules = { title: "required", paragraph: "required", qualificaton: "required", information: "required" };
         var validation = new Validator(req.body, rules);
         if (validation.fails()) {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
-            const { title, paragraph, } = req.body;
-            let imageData = await ImageCard.findOne({ title: title }).lean();
+            const { title, paragraph, qualificaton, information } = req.body;
+            let imageData = await FoundingCard.findOne({ title: title }).lean();
             if (!imageData) {
                 let result = await cloudinary.uploader.upload(req.file.path, {
                     images,
                     overwrite: true,
                     faces: false,
                 });
-                let data = await ImageCard.create({
+                let data = await FoundingCard.create({
                     title: title,
                     paragraph: paragraph,
+                    qualificaton: qualificaton,
+                    information: information,
                     image_url: result.secure_url,
                     image_id: result.public_id
                 });
@@ -41,9 +43,9 @@ exports.imageCardAdd = async (req, res, images) => {
     }
 }
 
-exports.imageCardGet = async (req, res) => {
+exports.foundingCardGet = async (req, res) => {
     try {
-        const contentlist = await ImageCard.find().sort({ createdAt: 1 });
+        const contentlist = await FoundingCard.find().sort({ createdAt: 1 });
         if (contentlist && contentlist.length > 0) {
             let cardData = []
             contentlist.forEach(content => {
@@ -51,6 +53,8 @@ exports.imageCardGet = async (req, res) => {
                     _id: content._id,
                     title: content.title,
                     paragraph: content.paragraph,
+                    qualificaton: content.qualificaton,
+                    information: content.information,
                     image_url: content.image_url,
                     image_id: content.image_id
                 };
@@ -66,10 +70,9 @@ exports.imageCardGet = async (req, res) => {
     }
 };
 
-
-exports.imageCardUpdate = async (req, res, images) => {
+exports.foundingCardUpdate = async (req, res, images) => {
     try {
-        const rules = { title: "required", paragraph: "required" };
+        const rules = { title: "required", paragraph: "required", qualificaton: "required", information: "required" };
         const validation = new Validator(req.body, rules);
 
         if (validation.fails()) {
@@ -78,15 +81,17 @@ exports.imageCardUpdate = async (req, res, images) => {
                 responseData: validation.errors.all(),
             });
         } else {
-            const { title, paragraph } = req.body;
+            const { title, paragraph, qualificaton, information } = req.body;
             const { _id } = req.query;
-            let imageData = await ImageCard.findById(_id).lean();
+            let imageData = await FoundingCard.findById(_id).lean();
             if (!imageData) {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
             } else {
                 let updatedData = {
                     title: title,
                     paragraph: paragraph,
+                    qualificaton: qualificaton,
+                    information: information
                 };
                 if (req.file) {
                     const result = await cloudinary.uploader.upload(req.file.path, {
@@ -97,7 +102,7 @@ exports.imageCardUpdate = async (req, res, images) => {
                     updatedData.image_url = result.secure_url;
                     updatedData.image_id = result.public_id;
                 }
-                const data = await ImageCard.findByIdAndUpdate({ _id: imageData._id }, updatedData, { new: true });
+                const data = await FoundingCard.findByIdAndUpdate({ _id: imageData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }
@@ -107,13 +112,12 @@ exports.imageCardUpdate = async (req, res, images) => {
     }
 };
 
-
-exports.imageCardDelete = async (req, res) => {
+exports.foundingCardDelete = async (req, res) => {
     try {
         const { _id } = req.query;
-        let imageData = await ImageCard.findById(_id).lean();
+        let imageData = await FoundingCard.findById(_id).lean();
         if (imageData) {
-            await ImageCard.findByIdAndDelete({ _id: imageData._id }, imageData, { new: true });
+            await FoundingCard.findByIdAndDelete({ _id: imageData._id }, imageData, { new: true });
             return res.status(200).json({ responseMessage: "Deleted Successfully ", responseData: {} });
         } else {
             return res.status(404).json({ responseMessage: "Data not found", responseData: {} });

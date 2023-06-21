@@ -119,7 +119,7 @@ app.use("/dev", require("./routes/stayCard"));
 app.use("/dev", require("./routes/program"))
 
 
-//API ROUTES for Dev portal-page
+//API ROUTES for community-page-page
 app.use("/community-page", require("./routes/social"));
 app.use("/community-page", require("./routes/platforms"));
 app.use("/community-page", require("./routes/ambassador"));
@@ -147,13 +147,31 @@ app.use("/ambassador", require("./routes/requireCard"));
 
 //API ROUTES for Press/mediakit-page
 app.use("/press", require("./routes/press"));
+app.use("/press", require("./routes/profile"));
+app.use("/press", require("./routes/profileCard"));
+app.use("/press", require("./routes/boilerplates"));
+app.use("/press", require("./routes/boilCard"));
+
+//API ROUTES for Core-team-page
+app.use("/team", require("./routes/team"));
+app.use("/team", require("./routes/meet"));
+app.use("/team", require("./routes/meetCount"));
+app.use("/team", require("./routes/founding"));
+app.use("/team", require("./routes/foundingCard"));
+app.use("/team", require("./routes/research"));
+app.use("/team", require("./routes/cardinal"));
+app.use("/team", require("./routes/cardinalCard"));
+app.use("/team", require("./routes/business"));
+app.use("/team", require("./routes/businessCard"));
+app.use("/team", require("./routes/advisors"));
+app.use("/team", require("./routes/advisorsCard"));
+app.use("/team", require("./routes/join"));
+app.use("/team", require("./routes/support"));
 
 
 
 app.listen(`${process.env.PORT}`, () => {
-
     console.log("Server Running on port", `${process.env.PORT}`)
-
 });
 
 

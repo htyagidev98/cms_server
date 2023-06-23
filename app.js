@@ -2,18 +2,22 @@ const express = require('express');
 mongoose = require('mongoose')
 cors = require('cors')
 bodyParser = require('body-parser')
+dotenv = require('dotenv')
 app = express();
+// const fileUpload = require('express-fileupload')
 require('dotenv').config();
 
 // Database connectivity
 
 var connectDb = () => {
-    return mongoose.connect(`${process.env.databaseURL}`,
+    return mongoose.connect(`${process.env.DATABASE_URL}`,
         console.log("Database connected")
     )
 };
 connectDb();
-
+// app.use(fileUpload({
+//     teampFile: true
+// }));
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({
     limit: "50mb",
@@ -151,6 +155,10 @@ app.use("/press", require("./routes/profile"));
 app.use("/press", require("./routes/profileCard"));
 app.use("/press", require("./routes/boilerplates"));
 app.use("/press", require("./routes/boilCard"));
+app.use("/press", require("./routes/pressNews"));
+app.use("/press", require("./routes/brand"));
+app.use("/press", require("./routes/brandCard"));
+
 
 //API ROUTES for Core-team-page
 app.use("/team", require("./routes/team"));

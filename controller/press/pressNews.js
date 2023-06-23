@@ -1,53 +1,76 @@
-// const MeetCard = require('../../models/meetCard')
-// bodyParser = require("body-parser")
-// Validator = require("validatorjs")
-// const cloudinary = require('cloudinary').v2;
+const PressNews = require('../../models/pressNews')
+bodyParser = require("body-parser")
+Validator = require("validatorjs")
+const cloudinary = require('cloudinary').v2;
 
-// cloudinary.config({
-//     cloud_name: 'dp6aceayp',
-//     api_key: '925825434622849',
-//     api_secret: 'uTuU6iIGtleSOIbtZDO_x5hPErc'
-// });
+cloudinary.config({
+    cloud_name: 'dp6aceayp',
+    api_key: '925825434622849',
+    api_secret: 'uTuU6iIGtleSOIbtZDO_x5hPErc'
+});
 
-// exports.meetCardAdd = async (req, res, images) => {
-//     // try {
-//         const rules = { title: "required", paragraph: "required" };
-//         var validation = new Validator(req.body, rules);
-//         if (validation.fails()) {
-//             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
-//         } else {
-//             const { title, paragraph } = req.body;
-//             let galleryData = await MeetCard.findOne({ title: title }).lean();
-//             if (!galleryData) {
-//                 let result1 = await cloudinary.uploader.upload(req.files[0].path, {
-//                     images,
-//                     overwrite: true,
-//                     faces: false,
-//                 });
-//                 let result2 = await cloudinary.uploader.upload(req.files[1].path, {
-//                     images,
-//                     overwrite: true,
-//                     faces: false,
-//                 });
-//                 let data = await MeetCard.create({
-//                     title: title,
-//                     paragraph: paragraph,
-//                     image_url: result1.secure_url,
-//                     image_id1: result1.public_id,
-//                     second_image_url: result2.secure_url,
-//                     second_image_id: result2.public_id,
-//                 });
-//                 return res.status(200).json({ responseMessage: "Successfully", responseData: { data }, });
-//             } else {
-//                 return res.status(403).json({ responseMessage: "title Exist", responseData: {} });
-//             }
-//         }
-//     // } catch (err) {
-//     //     return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {} });
-//     // }
-// }
+exports.pressNewsAdd = async (req, res, images) => {
+    try {
+        const rules = { year: "required", date: "required", paragraph: "required" };
+        var validation = new Validator(req.body, rules);
+        if (validation.fails()) {
+            return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
+        } else {
+            const { year, date, paragraph } = req.body;
+            let pressData = await PressNews.findOne({ year: year }).lean();
+            if (!pressData) {
 
+                let newsData = []
+                let result = await cloudinary.uploader.upload(req.file.path, {
+                    images,
+                    overwrite: true,
+                    faces: false,
+                });
+                newsData.push({
+                    date: date,
+                    paragraph: paragraph,
+                    image_url: result.secure_url,
+                    image_id: result.public_id,
+                })
+                let data = await PressNews.create({
+                    year: year,
+                    newsData: newsData
+                });
+                return res.status(200).json({ responseMessage: "Successfully", responseData: { data }, });
+            } else {
 
+                let result = await cloudinary.uploader.upload(req.file.path, {
+                    images,
+                    overwrite: true,
+                    faces: false,
+                });
+                pressData.newsData.push({
+                    date: date,
+                    paragraph: paragraph,
+                    image_url: result.secure_url,
+                    image_id: result.public_id,
+                });
+                const updatedData = await PressNews.findOneAndUpdate({ year: year }, { newsData: pressData.newsData }, { new: true });
+                return res.status(200).json({ responseMessage: "Successfully", responseData: { updatedData }, });
+            }
+        }
+    } catch (err) {
+        return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {} });
+    }
+}
+
+exports.pressNewsGet = async (req, res) => {
+    try {
+        const contentlist = await PressNews.find().sort({ createdAt: 1 });
+        if (contentlist && contentlist.length > 0) {
+            return res.status(200).json({ responseMessage: "Successfully", responseData: contentlist });
+        } else {
+            return res.status(404).json({ responseMessage: "No Data found", responseData: {} })
+        };
+    } catch (err) {
+        return res.status(500).json({ responseMessage: " Internal Sever Error", responseData: {} })
+    }
+};
 
 
 

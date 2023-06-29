@@ -28,25 +28,27 @@ exports.roadmapAdd = async (req, res) => {
     }
 }
 
-exports.roadmapGet = (req, res) => {
-    Roadmap.findOne({})
-      .then(contentlist => {
+
+exports.roadmapGet = async (req, res) => {
+    console.log(res);
+    try {
+        const contentlist = await Roadmap.findOne({}).maxTimeMS(5000); // Adjust the timeout duration as per your requirements
+        console.log("test", contentlist);
         if (contentlist) {
-          const contentObj = {
-            _id: contentlist._id,
-            title: contentlist.title,
-            paragraph: contentlist.paragraph,
-          };
-          return res.status(200).json({ responseMessage: "Successfully", responseData: contentObj });
+            const contentObj = {
+                _id: contentlist._id,
+                title: contentlist.title,
+                paragraph: contentlist.paragraph,
+            };
+            return res.status(200).json({ responseMessage: "Successfully", responseData: contentObj });
         } else {
-          return res.status(404).json({ responseMessage: "No Data found", responseData: {} });
+            return res.status(404).json({ responseMessage: "No Data found", responseData: {} });
         }
-      })
-      .catch(err => {
+    } catch (err) {
         return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {} });
-      });
-  };
-  
+    }
+};
+
 
 
 

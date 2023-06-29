@@ -1,6 +1,6 @@
 const multer = require('multer')
 const path = require('path');
-const { pressNewsAdd, pressNewsGet,pressNewsDelete } = require('../controller/press/pressNews')
+const { investorsCardAdd, investorsCardGet, investorsCardUpdate, investorsCardDelete } = require('../controller/press/investorCard')
 const express = require('express')
 router = express.Router();
 
@@ -18,9 +18,9 @@ const upload = multer({ storage: storage });
 // API Router
 
 
-router.post('/press/news/add', upload.single('image'), pressNewsAdd)
-router.get('/press/news/get', pressNewsGet)
-// router.put('/press/news/update', upload.single('image'), pressNewsUpdate)
-router.delete('/press/news/delete', pressNewsDelete)
+router.post('/investors/card/add', upload.single('image'), investorsCardAdd)
+router.get('/investors/card/get', investorsCardGet)
+router.put('/investors/card/update', upload.single('image'), investorsCardUpdate)
+router.delete('/investors/card/delete', investorsCardDelete)
 
 module.exports = router;

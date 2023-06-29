@@ -17,7 +17,8 @@ exports.pressNewsAdd = async (req, res, images) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { year, date, paragraph } = req.body;
-            let pressData = await PressNews.findOne({ year: year }).lean();
+            const yeardata = year.replace(/<[^>]*>/g, '').trim();
+            let pressData = await PressNews.findOne({ year: yeardata }).lean();
             if (!pressData) {
 
                 let newsData = []
@@ -33,7 +34,7 @@ exports.pressNewsAdd = async (req, res, images) => {
                     image_id: result.public_id,
                 })
                 let data = await PressNews.create({
-                    year: year,
+                    year: yeardata,
                     newsData: newsData
                 });
                 return res.status(200).json({ responseMessage: "Successfully", responseData: { data }, });
@@ -50,7 +51,7 @@ exports.pressNewsAdd = async (req, res, images) => {
                     image_url: result.secure_url,
                     image_id: result.public_id,
                 });
-                const updatedData = await PressNews.findOneAndUpdate({ year: year }, { newsData: pressData.newsData }, { new: true });
+                const updatedData = await PressNews.findOneAndUpdate({ year: yeardata }, { newsData: pressData.newsData }, { new: true });
                 return res.status(200).json({ responseMessage: "Successfully", responseData: { updatedData }, });
             }
         }
@@ -61,16 +62,74 @@ exports.pressNewsAdd = async (req, res, images) => {
 
 exports.pressNewsGet = async (req, res) => {
     try {
-        const contentlist = await PressNews.find().sort({ createdAt: 1 });
+        const contentlist = await PressNews.find().sort({ createdAt: -1 });
         if (contentlist && contentlist.length > 0) {
             return res.status(200).json({ responseMessage: "Successfully", responseData: contentlist });
         } else {
-            return res.status(404).json({ responseMessage: "No Data found", responseData: {} })
+            return res.status(200).json({ responseMessage: "No Data found", responseData: {} })
         };
     } catch (err) {
         return res.status(500).json({ responseMessage: " Internal Sever Error", responseData: {} })
     }
 };
+
+
+exports.pressNewsDelete = async (req, res) => {
+    try {
+        const { _id, newsDataId } = req.query;
+        if (_id) {
+            const pressData = await PressNews.findByIdAndDelete(_id);
+            if (pressData) {
+                return res.status(200).json({ responseMessage: "Deleted Successfully", responseData: {} });
+            } else {
+                return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
+            }
+        } else if (newsDataId) {
+            const pressData = await PressNews.findOneAndUpdate(
+                { "newsData._id": newsDataId },
+                { $pull: { newsData: { _id: newsDataId } } },
+                { new: true }
+            );
+
+            if (pressData) {
+                return res.status(200).json({ responseMessage: "Deleted Successfully", responseData: {} });
+            } else {
+                return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
+            }
+        } else {
+            return res.status(400).json({ responseMessage: "Bad Request", responseData: {} });
+        }
+    } catch (err) {
+        return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {} });
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+// exports.pressNewsDelete = async (req, res) => {
+//     try {
+//         const { _id } = req.query;
+//         let pressData = await PressNews.findById(_id).lean();
+//         if (pressData) {
+//             await PressNews.findByIdAndDelete({ _id: pressData._id }, pressData, { new: true });
+//             return res.status(200).json({ responseMessage: "Deleted Successfully ", responseData: {} });
+//         } else {
+//             return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
+//         }
+//     } catch (err) {
+//         return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {} });
+//     }
+// };
 
 
 
@@ -229,19 +288,5 @@ exports.pressNewsGet = async (req, res) => {
 // //     }
 // // };
 
-// // exports.meetCardDelete = async (req, res) => {
-// //     try {
-// //         const { _id } = req.query;
-// //         let meetData = await meetCard.findById(_id).lean();
-// //         if (meetData) {
-// //             await meetCard.findByIdAndDelete({ _id: meetData._id }, meetData, { new: true });
-// //             return res.status(200).json({ responseMessage: "Deleted Successfully ", responseData: {} });
-// //         } else {
-// //             return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
-// //         }
-// //     } catch (err) {
-// //         return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {} });
-// //     }
-// // };
 
 

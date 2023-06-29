@@ -51,6 +51,9 @@ app.use("/explore", require("./routes/scalability"));
 app.use("/explore", require("./routes/security"));
 app.use("/explore", require("./routes/privacy"))
 
+//API ROUTES for Roadmap-page
+app.use("/roadmap", require("./routes/roadmap"))
+
 //API ROUTES for Utility-page
 app.use("/utility", require("./routes/utility"));
 app.use("/utility", require("./routes/metrics"));
@@ -158,6 +161,8 @@ app.use("/press", require("./routes/boilCard"));
 app.use("/press", require("./routes/pressNews"));
 app.use("/press", require("./routes/brand"));
 app.use("/press", require("./routes/brandCard"));
+app.use("/press", require("./routes/investors"));
+app.use("/press", require("./routes/investorCard"));
 
 
 //API ROUTES for Core-team-page

@@ -31,7 +31,7 @@ exports.roadmapAdd = async (req, res) => {
 exports.roadmapGet = async (req, res) => {
     console.log(res)
     // try {
-    const contentlist = await Roadmap.findOne().lean();
+    const contentlist = await Roadmap.findOne();
     console.log("test", contentlist)
     if (contentlist) {
         const contentObj = {

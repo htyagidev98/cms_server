@@ -8,13 +8,17 @@ require('dotenv').config();
 
 // Database connectivity
 
-var connectDb = () => {
-    return mongoose.connect(`${process.env.MONGO_URL}`,
-        { useNewUrlParser: true },
-        console.log("Database connected")
-    )
+const connectDb = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO_URL);
+        console.log("Database connected");
+    } catch (error) {
+        console.error("Failed to connect to mongo on startup - retrying in 5 sec");
+        console.error(error);
+    }
 };
 connectDb();
+
 
 app.use(bodyParser.json({ limit: "100mb" }));
 app.use(bodyParser.urlencoded({

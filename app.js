@@ -10,7 +10,8 @@ require('dotenv').config();
 
 const connectDb = async () => {
     try {
-        await mongoose.connect(process.env.mongoURL);
+        await mongoose.connect(`${process.env.mongoURL}`),
+            { useNewUrlParser: true, useUnifiedTopology: true }
         console.log("Database connected");
     } catch (error) {
         console.error("Failed to connect to mongo on startup - retrying in 5 sec");

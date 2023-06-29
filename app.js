@@ -4,7 +4,6 @@ cors = require('cors')
 bodyParser = require('body-parser')
 dotenv = require('dotenv')
 app = express();
-// const fileUpload = require('express-fileupload')
 require('dotenv').config();
 
 // Database connectivity
@@ -15,9 +14,7 @@ var connectDb = () => {
     )
 };
 connectDb();
-// app.use(fileUpload({
-//     teampFile: true
-// }));
+
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({
     limit: "50mb",

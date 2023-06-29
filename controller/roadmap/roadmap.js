@@ -30,7 +30,7 @@ exports.roadmapAdd = async (req, res) => {
 
 exports.roadmapGet = async (req, res) => {
     console.log(res)
-    // try {
+    try {
     const contentlist = await Roadmap.findOne();
     console.log("test", contentlist)
     if (contentlist) {
@@ -43,9 +43,9 @@ exports.roadmapGet = async (req, res) => {
     } else {
         return res.status(404).json({ responseMessage: "No Data found", responseData: {} })
     }
-    // } catch (err) {
-    //     return res.status(500).json({ responseMessage: " Internal Sever Error", responseData: {} })
-    // }
+    } catch (err) {
+        return res.status(500).json({ responseMessage: " Internal Sever Error", responseData: {} })
+    }
 };
 
 exports.roadmapUpdate = async (req, res) => {

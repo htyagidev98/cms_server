@@ -10,14 +10,15 @@ require('dotenv').config();
 
 var connectDb = () => {
     return mongoose.connect(`${process.env.DATABASE_URL}`,
+        { useNewUrlParser: true },
         console.log("Database connected")
     )
 };
 connectDb();
 
-app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.json({ limit: "100mb" }));
 app.use(bodyParser.urlencoded({
-    limit: "50mb",
+    limit: "100mb",
     extended: true,
     parameterLimit: 50000,
 })

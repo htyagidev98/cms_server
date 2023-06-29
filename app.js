@@ -8,16 +8,28 @@ require('dotenv').config();
 
 // Database connectivity
 
+// var connectDb = () => {
+//     return mongoose.connect(`${process.env.DATABASE_URL}`,
+//         console.log("Database connected")
+//     )
+// };
+// connectDb();
+
 var connectDb = async () => {
-    return await mongoose.connect(`${process.env.DATABASE_URL}`,
-        console.log("Database connected")
-    )
+    try {
+        await mongoose.connect(`${process.env.DATABASE_URL}`);
+        console.log("Database connected");
+    } catch (error) {
+        console.error("Database connection error:", error);
+    }
 };
+
 connectDb();
 
-app.use(bodyParser.json({ limit: "50mb" }));
+
+app.use(bodyParser.json({ limit: "1000mb" }));
 app.use(bodyParser.urlencoded({
-    limit: "50mb",
+    limit: "100mb",
     extended: true,
     parameterLimit: 50000,
 })

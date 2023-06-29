@@ -10,7 +10,7 @@ require('dotenv').config();
 
 const connectDb = async () => {
     try {
-        await mongoose.connect(`${process.env.mongoURL}`),
+        await mongoose.connect(process.env.DATABASE_URL),
             { useNewUrlParser: true, useUnifiedTopology: true }
         console.log("Database connected");
     } catch (error) {
@@ -19,7 +19,6 @@ const connectDb = async () => {
     }
 };
 connectDb();
-
 
 app.use(bodyParser.json({ limit: "100mb" }));
 app.use(bodyParser.urlencoded({

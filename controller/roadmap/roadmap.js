@@ -28,12 +28,11 @@ exports.roadmapAdd = async (req, res) => {
     }
 }
 
-
 exports.roadmapGet = async (req, res) => {
-    console.log(res);
     try {
-        const contentlist = await Roadmap.findOne({}).maxTimeMS(5000); // Adjust the timeout duration as per your requirements
-        console.log("test", contentlist);
+        const { _id } = req.query;
+        const contentlist = await Roadmap.findById(_id);
+        console.log("test", contentlist)
         if (contentlist) {
             const contentObj = {
                 _id: contentlist._id,
@@ -42,36 +41,12 @@ exports.roadmapGet = async (req, res) => {
             };
             return res.status(200).json({ responseMessage: "Successfully", responseData: contentObj });
         } else {
-            return res.status(404).json({ responseMessage: "No Data found", responseData: {} });
+            return res.status(404).json({ responseMessage: "No Data found", responseData: {} })
         }
     } catch (err) {
-        return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {} });
+        return res.status(500).json({ responseMessage: " Internal Sever Error", responseData: {} })
     }
 };
-
-
-
-
-
-// exports.roadmapGet = async (req, res) => {
-//     console.log(res)
-//     try {
-//     const contentlist = await Roadmap.findOne({});
-//     console.log("test", contentlist)
-//     if (contentlist) {
-//         const contentObj = {
-//             _id: contentlist._id,
-//             title: contentlist.title,
-//             paragraph: contentlist.paragraph,
-//         };
-//         return res.status(200).json({ responseMessage: "Successfully", responseData: contentObj });
-//     } else {
-//         return res.status(404).json({ responseMessage: "No Data found", responseData: {} })
-//     }
-//     } catch (err) {
-//         return res.status(500).json({ responseMessage: " Internal Sever Error", responseData: {} })
-//     }
-// };
 
 exports.roadmapUpdate = async (req, res) => {
     try {

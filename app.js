@@ -8,7 +8,7 @@ require('dotenv').config();
 
 // Database connectivity
 
-// var connectDb = () => {
+// var connec tDb = () => {
 //     return mongoose.connect(`${process.env.DATABASE_URL}`,
 //         console.log("Database connected")
 //     )

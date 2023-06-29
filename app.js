@@ -9,7 +9,7 @@ require('dotenv').config();
 // Database connectivity
 
 var connectDb = () => {
-    return mongoose.connect(`${process.env.DATABASE_URL}`,
+    return mongoose.connect(`${process.env.MONGO_URL}`,
         { useNewUrlParser: true },
         console.log("Database connected")
     )

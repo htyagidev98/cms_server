@@ -25,6 +25,9 @@ app.use(bodyParser.urlencoded({
 mongoose.Promise = global.Promise;
 app.use(cors());
 
+// Middleware
+app.use(express.json());
+
 //API ROUTES for Homa-Page
 app.use("/", require("./routes/auth"));
 app.use("/", require("./routes/home"));

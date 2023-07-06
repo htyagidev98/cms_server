@@ -1,14 +1,7 @@
 const BrandCard = require('../../models/brandCard')
 bodyParser = require("body-parser")
 Validator = require("validatorjs")
-const cloudinary = require('cloudinary').v2;
-
-cloudinary.config({
-    cloud_name: 'dp6aceayp',
-    api_key: '925825434622849',
-    api_secret: 'uTuU6iIGtleSOIbtZDO_x5hPErc'
-});
-
+const cloudinary = require('../../utils/cloudinary')
 
 exports.brandCardAdd = async (req, res, images) => {
     try {
@@ -107,9 +100,8 @@ exports.brandCardUpdate = async (req, res, images) => {
 exports.brandCardDelete = async (req, res) => {
     try {
         const { _id } = req.query;
-        let brandData = await BrandCard.findById(_id).lean();
+        let brandData = await BrandCard.findByIdAndDelete(_id).lean();
         if (brandData) {
-            await BrandCard.findByIdAndDelete({ _id: brandData._id }, brandData, { new: true });
             return res.status(200).json({ responseMessage: "Deleted Successfully ", responseData: {} });
         } else {
             return res.status(404).json({ responseMessage: "Data not found", responseData: {} });

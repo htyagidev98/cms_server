@@ -6,15 +6,6 @@ dotenv = require('dotenv')
 app = express();
 require('dotenv').config();
 
-// Database connectivity
-
-// var connec tDb = () => {
-//     return mongoose.connect(`${process.env.DATABASE_URL}`,
-//         console.log("Database connected")
-//     )
-// };
-// connectDb();
-
 var connectDb = async () => {
     try {
         await mongoose.connect(`${process.env.DATABASE_URL}`);
@@ -23,7 +14,6 @@ var connectDb = async () => {
         console.error("Database connection error:", error);
     }
 };
-
 connectDb();
 
 

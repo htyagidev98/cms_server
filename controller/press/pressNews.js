@@ -1,13 +1,8 @@
 const PressNews = require('../../models/pressNews')
 bodyParser = require("body-parser")
 Validator = require("validatorjs")
-const cloudinary = require('cloudinary').v2;
+const cloudinary = require('../../utils/cloudinary')
 
-cloudinary.config({
-    cloud_name: 'dp6aceayp',
-    api_key: '925825434622849',
-    api_secret: 'uTuU6iIGtleSOIbtZDO_x5hPErc'
-});
 
 exports.pressNewsAdd = async (req, res, images) => {
     try {

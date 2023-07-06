@@ -1,13 +1,7 @@
 const EventCard = require('../../models/eventCard')
 bodyParser = require("body-parser")
 Validator = require("validatorjs")
-const cloudinary = require('cloudinary').v2;
-
-cloudinary.config({
-    cloud_name: 'dp6aceayp',
-    api_key: '925825434622849',
-    api_secret: 'uTuU6iIGtleSOIbtZDO_x5hPErc'
-});
+const cloudinary = require('../../utils/cloudinary')
 
 exports.eventCardAdd = async (req, res, images) => {
     try {

@@ -1,14 +1,7 @@
 const InvestorsCard = require('../../models/investorCard')
 bodyParser = require("body-parser")
 Validator = require("validatorjs")
-const cloudinary = require('cloudinary').v2;
-
-cloudinary.config({
-    cloud_name: 'dp6aceayp',
-    api_key: '925825434622849',
-    api_secret: 'uTuU6iIGtleSOIbtZDO_x5hPErc'
-});
-
+const cloudinary = require('../../utils/cloudinary')
 
 exports.investorsCardAdd = async (req, res, images) => {
     try {
@@ -94,9 +87,8 @@ exports.investorsCardUpdate = async (req, res, images) => {
 exports.investorsCardDelete = async (req, res) => {
     try {
         const { _id } = req.query;
-        let cardData = await InvestorsCard.findById(_id).lean();
+        let cardData = await InvestorsCard.findByIdAndDelete(_id).lean();
         if (cardData) {
-            await InvestorsCard.findByIdAndDelete({ _id: cardData._id }, cardData, { new: true });
             return res.status(200).json({ responseMessage: "Deleted Successfully ", responseData: {} });
         } else {
             return res.status(404).json({ responseMessage: "Data not found", responseData: {} });

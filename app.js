@@ -109,6 +109,8 @@ app.use("/build", require("./routes/process"));
 app.use("/build", require("./routes/processCard"));
 app.use("/build", require("./routes/supporter"));
 app.use("/build", require("./routes/supporterCard"))
+app.use("/build", require("./routes/documention"))
+
 
 //API ROUTES for Dev portal-page
 app.use("/dev", require("./routes/portal"));

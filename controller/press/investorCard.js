@@ -2,6 +2,7 @@ const InvestorsCard = require('../../models/investorCard')
 bodyParser = require("body-parser")
 Validator = require("validatorjs")
 const cloudinary = require('../../utils/cloudinary')
+const fs = require('fs');
 
 exports.investorsCardAdd = async (req, res, images) => {
     try {
@@ -14,6 +15,9 @@ exports.investorsCardAdd = async (req, res, images) => {
                 overwrite: true,
                 faces: false,
             });
+             
+              fs.unlinkSync(req.file.path);         // Remove the  image file from Uploads 
+
             let data = await InvestorsCard.create({
                 image_url: result.secure_url,
                 image_id: result.public_id

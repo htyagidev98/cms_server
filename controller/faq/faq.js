@@ -5,40 +5,40 @@ const cloudinary = require('../../utils/cloudinary')
 const fs = require('fs');
 
 exports.faqAdd = async (req, res, images) => {
-    // try {
-    const rules = { title: "required", heading: "required", paragraph: "required" };
+    try {
+        const rules = { title: "required", heading: "required", paragraph: "required" };
 
-    var validation = new Validator(req.body, rules);
-    if (validation.fails()) {
-        return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
-    } else {
-        const { title, heading, paragraph } = req.body;
-        let faqData = await FAQ.findOne({ title: title }).lean();
-        if (!faqData) {
-            let result = await cloudinary.uploader.upload(req.file.path, {
-                images,
-                overwrite: true,
-                faces: false,
-            });
-
-            fs.unlinkSync(req.file.path);         // Remove the  image file from Uploads 
-
-            let data = await FAQ.create({
-                title: title,
-                heading: heading,
-                paragraph: paragraph,
-                image_url: result.secure_url,
-                image_id: result.public_id
-            });
-            return res.status(200).json({ responseMessage: "Successfully", responseData: { data }, });
+        var validation = new Validator(req.body, rules);
+        if (validation.fails()) {
+            return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
-            return res.status(403).json({ responseMessage: "title Exist", responseData: {} })
-        }
-    }
-    // } catch (err) {
-    //     return res.status(500).json({ responseMessage: " Internal Sever Error", responseData: {} })
+            const { title, heading, paragraph } = req.body;
+            let faqData = await FAQ.findOne({ title: title }).lean();
+            if (!faqData) {
+                let result = await cloudinary.uploader.upload(req.file.path, {
+                    images,
+                    overwrite: true,
+                    faces: false,
+                });
 
-    // }
+                fs.unlinkSync(req.file.path);         // Remove the  image file from Uploads 
+
+                let data = await FAQ.create({
+                    title: title,
+                    heading: heading,
+                    paragraph: paragraph,
+                    image_url: result.secure_url,
+                    image_id: result.public_id
+                });
+                return res.status(200).json({ responseMessage: "Successfully", responseData: { data }, });
+            } else {
+                return res.status(403).json({ responseMessage: "title Exist", responseData: {} })
+            }
+        }
+    } catch (err) {
+        return res.status(500).json({ responseMessage: " Internal Sever Error", responseData: {} })
+
+    }
 };
 
 exports.faqGet = async (req, res) => {
@@ -63,7 +63,7 @@ exports.faqGet = async (req, res) => {
 };
 
 exports.faqUpdate = async (req, res, images) => {
-    // try {
+    try {
         const rules = { title: "required", heading: "required", paragraph: "required" };
         const validation = new Validator(req.body, rules);
 
@@ -100,9 +100,9 @@ exports.faqUpdate = async (req, res, images) => {
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }
         }
-    // } catch (err) {
-    //     return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {} });
-    // }
+    } catch (err) {
+        return res.status(500).json({ responseMessage: "Internal Server Error", responseData: {} });
+    }
 };
 
 

@@ -60,6 +60,7 @@ app.use("/roadmap", require("./routes/roadmap"))
 app.use("/faq", require("./routes/faq"))
 app.use("/faq", require("./routes/faqGenral"))
 app.use("/faq", require("./routes/consensus"))
+app.use("/faq", require("./routes/economy"))
 
 //API ROUTES for Utility-page
 app.use("/utility", require("./routes/utility"));

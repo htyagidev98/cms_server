@@ -1,8 +1,8 @@
-const FaqGenral = require('../../models/faqGenral')
+const Economy = require('../../models/economy')
 bodyParser = require("body-parser")
 Validator = require("validatorjs");
 
-exports.faqGenralAdd = async (req, res) => {
+exports.economyAdd = async (req, res) => {
     try {
         const rules = { title: "required", paragraph: "required" };
 
@@ -11,9 +11,9 @@ exports.faqGenralAdd = async (req, res) => {
             return res.status(422).json({ responseMessage: "Validation Error", responseData: validation.errors.all(), });
         } else {
             const { title, paragraph } = req.body;
-            let faqData = await FaqGenral.findOne({ title: title }).lean();
-            if (!faqData) {
-                let data = await FaqGenral.create({
+            let economyData = await Economy.findOne({ title: title }).lean();
+            if (!economyData) {
+                let data = await Economy.create({
                     title: title,
                     paragraph: paragraph
                 });
@@ -28,20 +28,16 @@ exports.faqGenralAdd = async (req, res) => {
     }
 };
 
-exports.faqGenralGet = async (req, res) => {
+exports.economyGet = async (req, res) => {
     try {
-        const contentlist = await FaqGenral.find().lean();
-        if (contentlist && contentlist.length > 0) {
-            let cardData = []
-            contentlist.forEach(content => {
-                const contentObj = {
-                    _id: content._id,
-                    title: content.title,
-                    paragraph: content.paragraph,
-                };
-                cardData.push(contentObj);
-            })
-            return res.status(200).json({ responseMessage: "Successfully", responseData: cardData });
+        const contentlist = await Economy.findOne().lean();
+        if (contentlist) {
+            const contentObj = {
+                _id: contentlist._id,
+                title: contentlist.title,
+                paragraph: contentlist.paragraph,
+            };
+            return res.status(200).json({ responseMessage: "Successfully", responseData: contentObj });
         } else {
             return res.status(404).json({ responseMessage: "No Data found", responseData: {} })
         };
@@ -50,7 +46,7 @@ exports.faqGenralGet = async (req, res) => {
     }
 };
 
-exports.faqGenralUpdate = async (req, res) => {
+exports.economyUpdate = async (req, res) => {
     try {
         const rules = { title: "required", paragraph: "required" };
         const validation = new Validator(req.body, rules);
@@ -63,15 +59,15 @@ exports.faqGenralUpdate = async (req, res) => {
         } else {
             const { title, paragraph } = req.body;
             const { _id } = req.query;
-            let faqData = await FaqGenral.findById(_id).lean();
-            if (!faqData) {
+            let economyData = await Economy.findById(_id).lean();
+            if (!economyData) {
                 return res.status(404).json({ responseMessage: "Data not found", responseData: {} });
             } else {
                 let updatedData = {
                     title: title,
                     paragraph: paragraph
                 };
-                const data = await FaqGenral.findByIdAndUpdate({ _id: faqData._id }, updatedData, { new: true });
+                const data = await Economy.findByIdAndUpdate({ _id: economyData._id }, updatedData, { new: true });
 
                 return res.status(200).json({ responseMessage: "Successfully updated", responseData: data });
             }

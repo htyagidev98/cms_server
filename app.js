@@ -64,6 +64,9 @@ app.use("/faq", require("./routes/economy"))
 app.use("/faq", require("./routes/buy"))
 app.use("/faq", require("./routes/faqEcosystem"))
 app.use("/faq", require("./routes/governance"))
+app.use("/faq", require("./routes/governanceText"))
+app.use("/faq", require("./routes/communityfaq"))
+app.use("/faq", require("./routes/glossary"))
 
 
 //API ROUTES for Utility-page

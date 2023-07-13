@@ -15,8 +15,8 @@ exports.investorsCardAdd = async (req, res, images) => {
                 overwrite: true,
                 faces: false,
             });
-             
-              fs.unlinkSync(req.file.path);         // Remove the  image file from Uploads 
+
+            fs.unlinkSync(req.file.path);         // Remove the  image file from Uploads 
 
             let data = await InvestorsCard.create({
                 image_url: result.secure_url,

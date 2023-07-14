@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require("path");
 mongoose = require('mongoose')
 cors = require('cors')
 bodyParser = require('body-parser')
@@ -198,7 +199,15 @@ app.use("/team", require("./routes/advisorsCard"));
 app.use("/team", require("./routes/join"));
 app.use("/team", require("./routes/support"));
 
+if (process.env.NODE_ENV === "production") {
+    // Serve any static files
+    app.use(express.static(path.join(__dirname, "client/build")));
 
+    // Handle React routing, return all requests to React app
+    app.get("*", function (req, res) {
+        res.sendFile(path.join(__dirname, "client/build", "index.html"));
+    });
+}
 
 app.listen(`${process.env.PORT}`, () => {
     console.log("Server Running on port", `${process.env.PORT}`)

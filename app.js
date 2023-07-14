@@ -199,6 +199,12 @@ app.use("/team", require("./routes/advisorsCard"));
 app.use("/team", require("./routes/join"));
 app.use("/team", require("./routes/support"));
 
+app.use((req, res, next) => {
+    const error = new Error("Not found");
+    error.status = 404;
+    next(error);
+});
+
 if (process.env.NODE_ENV === "production") {
     // Serve any static files
     app.use(express.static(path.join(__dirname, "client/build")));

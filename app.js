@@ -5,7 +5,6 @@ bodyParser = require('body-parser')
 dotenv = require('dotenv')
 app = express();
 require('dotenv').config();
-const path = require("path");
 
 var connectDb = async () => {
     try {
@@ -199,9 +198,6 @@ app.use("/team", require("./routes/advisorsCard"));
 app.use("/team", require("./routes/join"));
 app.use("/team", require("./routes/support"));
 
-if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "/client/build")));
-}
 
 
 app.listen(`${process.env.PORT}`, () => {
